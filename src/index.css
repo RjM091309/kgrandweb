@@ -1,0 +1,163 @@
+@import "tailwindcss";
+
+/* K Grand brand palette, sampled from public/images/kgrand-logo-dark.png.
+   `amber` = metallic gold of the K; `stone` = the logo's black/ivory neutrals.
+   Overriding these keeps every existing amber-* / stone-* class on brand. */
+@theme {
+  --color-amber-50: #fdf9ec;
+  --color-amber-100: #faf0cf;
+  --color-amber-200: #f4e2a1;
+  --color-amber-300: #ecce72;
+  --color-amber-400: #e0b94c;
+  --color-amber-500: #d4a537;
+  --color-amber-600: #b8892a;
+  --color-amber-700: #8a661b;
+  --color-amber-800: #6e5116;
+  --color-amber-900: #574012;
+  --color-amber-950: #33250a;
+
+  --color-stone-50: #faf9f6;
+  --color-stone-100: #f3f1ec;
+  --color-stone-200: #e5e2db;
+  --color-stone-300: #cfcbc2;
+  --color-stone-400: #a8a39a;
+  --color-stone-500: #7a766e;
+  --color-stone-600: #5c5852;
+  --color-stone-700: #45423d;
+  --color-stone-800: #2a2825;
+  --color-stone-900: #1a1917;
+  --color-stone-950: #0d0c0b;
+}
+
+@layer base {
+  :root {
+    --font-serif: "Playfair Display", Georgia, serif;
+    --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: #1a1917;
+    background-color: #faf9f6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: var(--font-serif);
+  }
+
+  /* Tailwind v4 preflight resets buttons to cursor: default; restore the pointer. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  select,
+  summary {
+    cursor: pointer;
+  }
+}
+
+/* Custom luxury subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f3f1ec;
+}
+::-webkit-scrollbar-thumb {
+  background: #e0b94c;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b8892a;
+}
+
+/* Metallic gold CTA with a periodic shimmer sweep, matching the logo's "K". */
+@utility btn-gold {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 2px;
+  color: var(--color-stone-950);
+  background: linear-gradient(135deg, #b8892a 0%, #ecce72 28%, #f7e7a8 50%, #e0b94c 72%, #a87c22 100%);
+  background-size: 200% 200%;
+  background-position: 0% 50%;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.45), inset 0 -1px 0 rgb(0 0 0 / 0.18), 0 2px 8px rgb(212 165 55 / 0.25);
+  transition: background-position 0.5s ease, box-shadow 0.3s ease, transform 0.15s ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.75) 50%, transparent 70%);
+    transform: translateX(-120%);
+    animation: gold-shimmer 3.5s ease-in-out infinite;
+  }
+
+  &:hover {
+    background-position: 100% 50%;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.55), inset 0 -1px 0 rgb(0 0 0 / 0.18), 0 4px 16px rgb(212 165 55 / 0.45);
+  }
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+@keyframes gold-shimmer {
+  0% { transform: translateX(-120%); }
+  45%, 100% { transform: translateX(120%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-gold::after { animation: none; }
+}
+
+/* Corner ribbon that wraps around the card edge (not used right now; markup: <div class="ribbon-corner"><span>Text</span></div>). The ::before/::after squares are the
+   darker "folds" peeking out behind the band where it bends over the top and right edges. */
+.ribbon-corner {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  isolation: isolate;
+  pointer-events: none;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    border: 4px solid #000; /* back of the ribbon: a shade darker than the band so the fold reads as shadow */
+    border-top-color: transparent;
+    border-right-color: transparent;
+  }
+  &::before { top: 0; left: 0; }
+  &::after { bottom: 0; right: 0; }
+
+  & > span {
+    position: absolute;
+    top: 36px; /* band sits just inside both fold corners so the folds peek out */
+    left: -14px;
+    width: 170px;
+    padding: 6px 0;
+    line-height: 14px;
+    transform: rotate(45deg);
+    overflow: hidden;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-amber-300);
+    text-shadow: 0 1px 1px rgb(0 0 0 / 0.6);
+    background: linear-gradient(180deg, #3a3733 0%, #1a1917 45%, #0d0c0b 100%);
+    /* thin gold piping along both edges of the dark band */
+    box-shadow:
+      0 4px 10px rgb(0 0 0 / 0.45),
+      inset 0 1.5px 0 var(--color-amber-400),
+      inset 0 -1.5px 0 var(--color-amber-600);
+  }
+}
