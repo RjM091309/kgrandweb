@@ -558,7 +558,7 @@ export const MyBookingsPage: React.FC = () => {
       </div>
 
       {userBookings.length === 0 ? (
-        <div className="p-12 text-center bg-white rounded-2xl border border-stone-200 space-y-3">
+        <div className="p-12 text-center bg-white rounded-sm border border-transparent shadow-[0_10px_20px_-8px_rgb(0_0_0/0.15)] space-y-3">
           <Calendar className="w-8 h-8 text-stone-300 mx-auto" />
           <h3 className="font-serif text-lg text-stone-800">No Reservations On Record</h3>
           <p className="text-xs text-stone-500 max-w-sm mx-auto">
@@ -580,7 +580,7 @@ export const MyBookingsPage: React.FC = () => {
             return (
               <div
                 key={booking.reference}
-                className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hover:border-amber-300 transition-all"
+                className="bg-white rounded-sm border border-transparent shadow-[0_10px_20px_-8px_rgb(0_0_0/0.18),0_2px_4px_-2px_rgb(0_0_0/0.06)] p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hover:-translate-y-0.5 hover:shadow-[0_16px_28px_-10px_rgb(0_0_0/0.22),0_2px_6px_-2px_rgb(0_0_0/0.08)] transition-all duration-300"
               >
                 {/* Left: Suite info and thumbnail */}
                 <div className="flex items-start gap-4">
@@ -588,7 +588,7 @@ export const MyBookingsPage: React.FC = () => {
                     src={booking.room.images[0]}
                     alt={booking.room.name}
                     referrerPolicy="no-referrer"
-                    className="w-24 h-20 object-cover rounded-xl shrink-0"
+                    className="w-24 h-20 object-cover rounded-xs shrink-0"
                   />
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
@@ -619,7 +619,7 @@ export const MyBookingsPage: React.FC = () => {
                 </div>
 
                 {/* Right: Amount & Action buttons */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full md:w-auto justify-between border-t md:border-t-0 pt-4 md:pt-0">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full md:w-auto justify-between border-t border-stone-100 md:border-t-0 pt-4 md:pt-0">
                   <div className="text-left md:text-right">
                     <span className="text-[10px] text-stone-400 block uppercase">Total Amount</span>
                     <span className="text-lg font-serif font-bold text-stone-900 tabular-nums">
