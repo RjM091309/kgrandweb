@@ -329,12 +329,12 @@ export const OffersPage: React.FC = () => {
             {/* Details */}
             <div className="lg:col-span-7 p-6 sm:p-8 flex flex-col justify-between space-y-6">
               <div className="space-y-3">
-                <div className="flex items-center gap-2 text-xs text-amber-800 font-medium">
-                  <span>Save {offer.discountPercentage}%</span>
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-amber-800 font-medium">
+                  <span className="whitespace-nowrap">Save {offer.discountPercentage}%</span>
                   <span aria-hidden="true">·</span>
-                  <span>Promo Code: <strong className="font-mono">{offer.promoCode}</strong></span>
+                  <span className="whitespace-nowrap">Promo Code: <strong className="font-mono">{offer.promoCode}</strong></span>
                   <span aria-hidden="true">·</span>
-                  <span>Min. {offer.minNights} Nights</span>
+                  <span className="whitespace-nowrap">Min. {offer.minNights} Nights</span>
                 </div>
 
                 <h2 className="font-serif text-2xl text-stone-900">
@@ -360,8 +360,8 @@ export const OffersPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-stone-100 flex items-center justify-between">
-                <span className="text-[11px] text-stone-400">
+              <div className="pt-4 border-t border-stone-100 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                <span className="text-[11px] text-stone-400 text-center sm:text-left">
                   Valid until {offer.validUntil}
                 </span>
 

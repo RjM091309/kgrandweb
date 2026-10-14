@@ -7,6 +7,7 @@ import React from 'react';
 import { HotelProvider, useHotel } from './context/HotelContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
+import { MobileBottomNav } from './components/MobileBottomNav';
 import { LightboxModal } from './components/LightboxModal';
 import { ToastNotification } from './components/ToastNotification';
 
@@ -69,6 +70,7 @@ export default function App() {
         <div className="flex-1">
           <MainContent />
         </div>
+        <MobileBottomNav />
         <LightboxModal />
         <ToastNotification />
       </div>

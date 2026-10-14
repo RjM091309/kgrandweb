@@ -183,6 +183,9 @@ export const BookingFlowPage: React.FC = () => {
               );
             })}
           </div>
+          <p className="sm:hidden mt-3 text-center text-xs text-stone-500">
+            Step {currentStep} of 4 · <span className="font-semibold text-stone-900">{stepTitles[currentStep - 1]}</span>
+          </p>
         </div>
       )}
 
@@ -192,7 +195,7 @@ export const BookingFlowPage: React.FC = () => {
         <div className={currentStep === 5 ? 'lg:col-span-12' : 'lg:col-span-8'}>
           {/* STEP 1: Dates & Suite Selection */}
           {currentStep === 1 && (
-            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200 shadow-sm space-y-6">
+            <div className="bg-white rounded-2xl p-5 sm:p-8 border border-stone-200 shadow-sm space-y-6">
               <div>
                 <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold block mb-1">
                   Step 1 of 4
@@ -275,9 +278,9 @@ export const BookingFlowPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setCurrentStep(2)}
-                  className="px-6 py-3 text-xs uppercase tracking-wider font-semibold bg-stone-900 hover:bg-stone-800 text-white rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
+                  className="w-full sm:w-auto justify-center px-6 py-3 text-xs uppercase tracking-wider font-semibold bg-stone-900 hover:bg-stone-800 text-white rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
                 >
-                  <span>Continue to Enhancements</span>
+                  <span>Continue<span className="hidden min-[400px]:inline"> to Enhancements</span></span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
@@ -286,7 +289,7 @@ export const BookingFlowPage: React.FC = () => {
 
           {/* STEP 2: Add-ons & Promotional Offers */}
           {currentStep === 2 && (
-            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200 shadow-sm space-y-6">
+            <div className="bg-white rounded-2xl p-5 sm:p-8 border border-stone-200 shadow-sm space-y-6">
               <div>
                 <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold block mb-1">
                   Step 2 of 4
@@ -388,7 +391,7 @@ export const BookingFlowPage: React.FC = () => {
                   onClick={() => setCurrentStep(3)}
                   className="px-6 py-3 text-xs uppercase tracking-wider font-semibold bg-stone-900 hover:bg-stone-800 text-white rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
                 >
-                  <span>Continue to Guest Details</span>
+                  <span>Continue<span className="hidden min-[400px]:inline"> to Guest Details</span></span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
@@ -397,7 +400,7 @@ export const BookingFlowPage: React.FC = () => {
 
           {/* STEP 3: Guest Details Form */}
           {currentStep === 3 && (
-            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200 shadow-sm space-y-6">
+            <div className="bg-white rounded-2xl p-5 sm:p-8 border border-stone-200 shadow-sm space-y-6">
               <div>
                 <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold block mb-1">
                   Step 3 of 4
@@ -529,7 +532,7 @@ export const BookingFlowPage: React.FC = () => {
                   onClick={() => setCurrentStep(4)}
                   className="px-6 py-3 text-xs uppercase tracking-wider font-semibold bg-stone-900 hover:bg-stone-800 text-white rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
                 >
-                  <span>Continue to Payment Preview</span>
+                  <span>Continue<span className="hidden min-[400px]:inline"> to Payment Preview</span></span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
@@ -538,7 +541,7 @@ export const BookingFlowPage: React.FC = () => {
 
           {/* STEP 4: Payment Preview Screen */}
           {currentStep === 4 && (
-            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200 shadow-sm space-y-6">
+            <div className="bg-white rounded-2xl p-5 sm:p-8 border border-stone-200 shadow-sm space-y-6">
               <div>
                 <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold block mb-1">
                   Step 4 of 4
@@ -674,10 +677,10 @@ export const BookingFlowPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleConfirmReservation}
-                  className="px-8 py-3.5 text-xs uppercase tracking-widest font-semibold bg-amber-300 hover:bg-amber-200 text-stone-950 rounded-lg transition-all shadow-md flex items-center gap-2 cursor-pointer"
+                  className="px-5 sm:px-8 py-3.5 text-xs uppercase tracking-widest font-semibold bg-amber-300 hover:bg-amber-200 text-stone-950 rounded-lg transition-all shadow-md flex items-center gap-2 cursor-pointer"
                 >
                   <ShieldCheck className="w-4 h-4" />
-                  <span>Confirm Reservation (Preview)</span>
+                  <span>Confirm<span className="hidden min-[400px]:inline"> Reservation (Preview)</span></span>
                 </button>
               </div>
             </div>

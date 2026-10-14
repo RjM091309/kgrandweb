@@ -82,7 +82,7 @@ export const HeroSearchPanel: React.FC<HeroSearchPanelProps> = ({ compact = fals
       </button>
 
       {showGuestDropdown && (
-        <div className="absolute top-full right-0 mt-2 z-50 w-[min(calc(100vw-2rem),20rem)] rounded-sm border border-stone-200 bg-white p-5 shadow-2xl animate-in fade-in slide-in-from-top-1">
+        <div className="absolute top-full left-1/2 -translate-x-1/2 sm:left-auto sm:right-0 sm:translate-x-0 mt-2 z-50 w-[min(calc(100vw-2rem),20rem)] rounded-sm border border-stone-200 bg-white p-5 shadow-2xl animate-in fade-in slide-in-from-top-1">
           <div className="divide-y divide-stone-100">
             {guestRows.map((row) => (
               <div key={row.key} className="flex items-center justify-between gap-4 py-3.5 first:pt-0">
@@ -137,7 +137,7 @@ export const HeroSearchPanel: React.FC<HeroSearchPanelProps> = ({ compact = fals
 
   if (isCard) {
     return (
-      <div className="relative w-full bg-white/95 backdrop-blur-md rounded-sm shadow-2xl border border-white/40 p-6 sm:p-7">
+      <div className="relative w-full bg-white/95 backdrop-blur-md rounded-sm shadow-2xl border border-white/40 p-5 sm:p-7">
         <div className="mb-5">
           <div className="flex items-center gap-2.5">
             <p className="text-[11px] uppercase tracking-[0.25em] font-semibold text-amber-700">Book Direct</p>

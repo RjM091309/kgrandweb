@@ -42,7 +42,7 @@ export const Footer: React.FC = () => {
     'text-[11px] font-semibold uppercase tracking-[0.2em] text-amber-300 mb-5';
 
   return (
-    <footer className="relative bg-stone-950 text-stone-300">
+    <footer className="relative bg-stone-950 text-stone-300 pb-[calc(92px+env(safe-area-inset-bottom))] lg:pb-0">
       {/* Gold hairline across the top */}
       <div className="h-px bg-linear-to-r from-transparent via-amber-400/70 to-transparent" />
 

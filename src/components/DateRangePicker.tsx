@@ -33,6 +33,9 @@ const nightsBetween = (a: string, b: string) =>
 
 const formatShort = (key: string) =>
   key ? fromKey(key).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) : 'Select date';
+const formatWeekday = (key: string) => (key ? fromKey(key).toLocaleDateString('en-US', { weekday: 'short' }) : '');
+const formatMonthDay = (key: string) =>
+  key ? fromKey(key).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Select date';
 const formatYear = (key: string) => (key ? fromKey(key).getFullYear() : '');
 
 export const DateRangePicker: React.FC<DateRangePickerProps> = ({
@@ -169,8 +172,11 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
             isActive ? 'bg-white ring-1 ring-amber-400' : 'hover:bg-white/70'
           }`}
         >
-          <span className="block text-[10px] uppercase tracking-wider text-stone-500">{label}</span>
-          <span className="block text-xs font-semibold text-stone-900 mt-0.5 truncate">{formatShort(value)}</span>
+          <span className="block text-[10px] uppercase tracking-wider text-stone-500 whitespace-nowrap">{label}</span>
+          <span className="block text-xs font-semibold text-stone-900 mt-0.5 truncate">
+            {value && <span className="hidden min-[400px]:inline">{formatWeekday(value)}, </span>}
+            {formatMonthDay(value)}
+          </span>
         </button>
       );
     }
@@ -188,7 +194,11 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
         </span>
         <span className="flex items-center gap-2">
           <Calendar className={`w-4 h-4 shrink-0 ${isActive ? 'text-amber-600' : 'text-amber-700'}`} />
-          <span className="text-sm font-semibold text-stone-900 truncate">{formatShort(value)}</span>
+          <span className="text-sm font-semibold text-stone-900 truncate">
+            {/* Weekday drops on very narrow phones so the date itself never gets truncated. */}
+            {value && <span className="hidden min-[360px]:inline">{formatWeekday(value)}, </span>}
+            {formatMonthDay(value)}
+          </span>
           <span className="hidden xl:inline text-xs text-stone-400">{formatYear(value)}</span>
         </span>
       </button>
@@ -217,7 +227,9 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
 
       {open && (
         <div
-          className={`absolute ${align === 'right' ? 'right-0' : 'left-0'} top-full mt-2 z-50 rounded-sm border border-stone-200 bg-white p-4 sm:p-5 shadow-2xl animate-in fade-in slide-in-from-top-1 ${
+          className={`absolute left-1/2 -translate-x-1/2 ${
+            align === 'right' ? 'sm:left-auto sm:right-0' : 'sm:left-0'
+          } sm:translate-x-0 top-full mt-2 z-50 rounded-sm border border-stone-200 bg-white p-4 sm:p-5 shadow-2xl animate-in fade-in slide-in-from-top-1 ${
             isHero ? 'w-[min(calc(100vw-2rem),22rem)] md:w-[40rem]' : 'w-[min(calc(100vw-2rem),20rem)]'
           }`}
         >

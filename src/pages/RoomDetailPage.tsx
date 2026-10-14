@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { DateRangePicker } from '../components/DateRangePicker';
 import { useHotel } from '../context/HotelContext';
 import { ROOMS, Room, HOTEL_INFO, IMAGES } from '../data/hotelData';
@@ -27,6 +27,24 @@ export const RoomDetailPage: React.FC = () => {
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
+  const bookingCardRef = useRef<HTMLDivElement>(null);
+  const [showMobileBar, setShowMobileBar] = useState(true);
+
+  // On mobile the booking card sits below all the room details; show a sticky
+  // reserve bar until the card itself scrolls into view.
+  useEffect(() => {
+    const update = () => {
+      const card = bookingCardRef.current;
+      if (card) setShowMobileBar(card.getBoundingClientRect().top > window.innerHeight);
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    return () => {
+      window.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
+  }, []);
 
   // Calculate stay duration and costs
   const checkInDate = new Date(searchState.checkIn);
@@ -104,19 +122,19 @@ export const RoomDetailPage: React.FC = () => {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-40" />
 
-            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white">
-              <span className="text-xs sm:text-sm font-serif italic text-amber-200">
+            <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 flex items-end justify-between gap-3 text-white">
+              <span className="min-w-0 truncate text-xs sm:text-sm font-serif italic text-amber-200">
                 {room.tagline}
               </span>
-              <div className="bg-stone-950/80 px-3 py-1.5 rounded-md text-xs flex items-center gap-1.5 text-stone-200">
+              <div className="shrink-0 bg-stone-950/80 p-2 sm:px-3 sm:py-1.5 rounded-md text-xs flex items-center gap-1.5 text-stone-200">
                 <Eye className="w-3.5 h-3.5 text-amber-300" />
-                <span>Click to view full screen</span>
+                <span className="hidden sm:inline">Click to view full screen</span>
               </div>
             </div>
           </div>
 
           {/* Thumbnails row */}
-          <div className="grid grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-4 gap-2 sm:gap-4">
             {room.images.map((img, idx) => (
               <button
                 key={idx}
@@ -146,7 +164,7 @@ export const RoomDetailPage: React.FC = () => {
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform"
               />
-              <div className="absolute inset-0 flex items-center justify-center text-white text-xs font-medium">
+              <div className="absolute inset-0 flex items-center justify-center text-center text-white text-[10px] sm:text-xs font-medium leading-tight">
                 <span>View Grounds</span>
               </div>
             </button>
@@ -250,7 +268,7 @@ export const RoomDetailPage: React.FC = () => {
           </div>
 
           {/* Right Column: Sticky Reservation Purchase Module */}
-          <div className="lg:col-span-5 lg:sticky lg:top-24">
+          <div ref={bookingCardRef} className="lg:col-span-5 lg:sticky lg:top-24 scroll-mt-24">
             <div className="bg-white rounded-2xl p-6 sm:p-7 border border-stone-200 shadow-xl space-y-6">
               {/* Header Price */}
               <div className="flex items-baseline justify-between pb-4 border-b border-stone-100">
@@ -353,7 +371,7 @@ export const RoomDetailPage: React.FC = () => {
 
         {/* 3. Related Rooms Section */}
         <div className="pt-16 border-t border-stone-200 space-y-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
             <div>
               <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold block">
                 Alternate Residences
@@ -364,9 +382,9 @@ export const RoomDetailPage: React.FC = () => {
             </div>
             <button
               onClick={() => navigateTo('rooms')}
-              className="text-xs font-semibold uppercase tracking-wider text-amber-800 hover:text-stone-900"
+              className="self-start sm:self-auto text-xs font-semibold uppercase tracking-wider text-amber-800 hover:text-stone-900"
             >
-              View All 6 Rooms
+              View All {ROOMS.length} Rooms
             </button>
           </div>
 
@@ -407,6 +425,34 @@ export const RoomDetailPage: React.FC = () => {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* Mobile sticky reserve bar */}
+      <div
+        className={`lg:hidden fixed inset-x-3 bottom-[calc(96px+env(safe-area-inset-bottom))] z-30 rounded-2xl border border-stone-200 bg-white/95 backdrop-blur-md px-4 py-3 shadow-[0_8px_24px_rgb(0_0_0/0.18)] transition-all duration-300 ${
+          showMobileBar ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0 pointer-events-none'
+        }`}
+        aria-hidden={!showMobileBar}
+      >
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <p className="font-serif text-lg font-bold text-stone-900 tabular-nums leading-tight">
+              ₱{room.pricePerNight.toLocaleString()} <span className="font-sans text-xs font-normal text-stone-500">/ night</span>
+            </p>
+            <p className="text-[11px] text-stone-500 truncate">
+              ₱{totalAmount.toLocaleString()} total · {nightsCount} {nightsCount === 1 ? 'night' : 'nights'}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleReserve}
+            tabIndex={showMobileBar ? 0 : -1}
+            className="shrink-0 py-3 px-5 bg-amber-300 hover:bg-amber-200 active:bg-amber-400 text-stone-950 font-semibold text-xs tracking-wider uppercase rounded-lg transition-colors shadow-md flex items-center gap-2 cursor-pointer"
+          >
+            <span>Reserve</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </div>
