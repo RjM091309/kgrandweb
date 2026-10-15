@@ -36,21 +36,21 @@ export const AboutPage: React.FC = () => {
       {/* Banner */}
       <section className="relative h-80 sm:h-96 flex items-center justify-center overflow-hidden bg-stone-950">
         <img
-          src={IMAGES.hero}
-          alt="Aurelia heritage architecture"
+          src={IMAGES.entrance}
+          alt="The K Grand Hotel entrance"
           referrerPolicy="no-referrer"
           className="absolute inset-0 w-full h-full object-cover opacity-45"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/40 to-stone-950/80" />
         <div className="relative z-10 max-w-3xl mx-auto px-4 text-center space-y-3">
           <span className="text-xs uppercase tracking-[0.25em] text-amber-300 font-medium">
-            Cap d'Or Riviera
+            Clark Freeport Zone, Pampanga
           </span>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-white font-light">
-            Our Heritage & Vision
+            About The K Grand Hotel
           </h1>
           <p className="text-xs sm:text-sm text-stone-300 max-w-xl mx-auto leading-relaxed">
-            A century of timeless coastal discretion, bespoke craftsmanship, and sensory hospitality.
+            Apartment-style comfort, minutes from Clark International Airport.
           </p>
         </div>
       </section>
@@ -60,91 +60,91 @@ export const AboutPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           <div className="space-y-4">
             <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold block">
-              Chapter I · Founded 1928
+              Who We Are
             </span>
             <h2 className="text-2xl sm:text-3xl font-serif text-stone-900 leading-tight">
-              A Private Aristocratic Sanctuary Reimagined
+              A Home Base in the Heart of Clark
             </h2>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-              Constructed in 1928 by Countess Hélène de San Pietro, Aurelia was originally conceived as an intimate summer retreat for writers, diplomats, and avant-garde artists seeking tranquility away from the bustling ports of Cannes and Monaco.
+              The K Grand Hotel sits on E. Aguinaldo Street inside Clark Freeport Zone, about 4 km from Clark International Airport. We offer apartment-style rooms for travelers who want the comfort of home, whether they are staying one night or several weeks.
             </p>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-              Every archway, limestone retaining wall, and century-old olive grove was carefully oriented to capture the gentle sea breezes and the mesmerizing play of golden hour light across the Mediterranean horizon.
+              Every room has air-conditioning, a private bathroom, a work desk, and its own terrace or balcony, so there is always space to work, rest, and breathe.
             </p>
           </div>
           <div
             className="rounded-2xl overflow-hidden shadow-xl aspect-[4/3] cursor-pointer"
-            onClick={() => openLightbox(IMAGES.cliffsideVilla, 'Architectural Heritage', 'Limestone terraces')}
+            onClick={() => openLightbox(IMAGES.storyRoom, 'Guest Room', 'Apartment-style comfort at The K Grand Hotel')}
           >
             <img
-              src={IMAGES.cliffsideVilla}
-              alt="Aurelia historic terraces"
+              src={IMAGES.storyRoom}
+              alt="Guest room at The K Grand Hotel"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
             />
           </div>
         </div>
 
-        {/* Chapter 2: The Culinary Brigade */}
+        {/* Our Care */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center md:flex-row-reverse">
           <div
             className="rounded-2xl overflow-hidden shadow-xl aspect-[4/3] order-2 md:order-1 cursor-pointer"
-            onClick={() => openLightbox(IMAGES.fineDining, 'Chef Julien Moreau & L Aura', 'Two Michelin Stars')}
+            onClick={() => openLightbox(IMAGES.galleryLobby, 'Lobby & Reception', 'Where our team welcomes you to Clark')}
           >
             <img
-              src={IMAGES.fineDining}
-              alt="L'Aura dining room"
+              src={IMAGES.galleryLobby}
+              alt="The K Grand Hotel lobby and reception"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
             />
           </div>
           <div className="space-y-4 order-1 md:order-2">
             <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold block">
-              Chapter II · Gastronomic Terroir
+              Our Promise
             </span>
             <h2 className="text-2xl sm:text-3xl font-serif text-stone-900 leading-tight">
-              Culinary Artistry by Chef Julien Moreau
+              Inspired by Comfort, Defined by Care
             </h2>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-              Awarded two Michelin Stars in 2022, Chef Julien Moreau's cuisine at L'Aura is a celebration of the Côte d'Azur's bounty. Over 80% of our produce originates from our private 3-hectare biodynamic estate garden and small artisanal fishermen along the bay.
+              From the moment you arrive, our front desk team is here to help, whether it is directions around Clark, an early check-in request, or a long-stay arrangement.
             </p>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-              "We cook without haste, allowing the sea salt, wild thyme, and sun-ripened citrus to express their authentic purity."
+              After a day of meetings or sightseeing, unwind in the sauna or take a dip in the pool, then rest well in a quiet, well-kept room.
             </p>
           </div>
         </div>
 
-        {/* Sustainability & Environmental Pledge */}
+        {/* Why Stay With Us */}
         <div className="bg-stone-100 p-8 sm:p-10 rounded-2xl border border-stone-200 space-y-6">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <span className="text-xs uppercase tracking-widest text-amber-800 font-semibold block">
-              Ecological Stewardship
+              Why Guests Choose Us
             </span>
             <h3 className="text-2xl font-serif text-stone-900">
-              Our Commitment to the Mediterranean
+              Made for Easy Stays in Clark
             </h3>
             <p className="text-xs text-stone-600">
-              Preserving our marine sanctuary and heritage parklands for generations to come.
+              Practical comforts for business trips, family visits, and weekend getaways.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4 text-xs text-stone-700">
             <div className="bg-white p-5 rounded-xl border border-stone-200/80 space-y-2">
-              <span className="font-serif font-bold text-lg text-stone-900 block">100% Green Energy</span>
+              <span className="font-serif font-bold text-lg text-stone-900 block">Close to the Airport</span>
               <p className="text-stone-500 leading-relaxed">
-                Powered completely by unobtrusive rooftop solar pergolas and seawater geothermal thermal loops.
+                About 4 km from Clark International Airport, ideal before an early flight or after a late arrival.
               </p>
             </div>
             <div className="bg-white p-5 rounded-xl border border-stone-200/80 space-y-2">
-              <span className="font-serif font-bold text-lg text-stone-900 block">Single-Use Plastic Free</span>
+              <span className="font-serif font-bold text-lg text-stone-900 block">Free Parking & EV Charging</span>
               <p className="text-stone-500 leading-relaxed">
-                All guest amenities are packaged in refillable amber glass, recycled stone, and organic linen.
+                Drive in with ease. Parking is free for guests, and you can charge your electric vehicle on site.
               </p>
             </div>
             <div className="bg-white p-5 rounded-xl border border-stone-200/80 space-y-2">
-              <span className="font-serif font-bold text-lg text-stone-900 block">Posidonia Reef Protection</span>
+              <span className="font-serif font-bold text-lg text-stone-900 block">Sauna & Pool</span>
               <p className="text-stone-500 leading-relaxed">
-                We actively sponsor underwater seabed restoration across the Cap d'Or marine nature reserve.
+                Relax and recharge between meetings, sightseeing, and travel days.
               </p>
             </div>
           </div>
@@ -175,21 +175,21 @@ export const AmenitiesPage: React.FC = () => {
       {/* Banner */}
       <section className="relative h-80 sm:h-96 flex items-center justify-center overflow-hidden bg-stone-950">
         <img
-          src={IMAGES.spaPool}
-          alt="Aurelia pool & spa"
+          src={IMAGES.entrance2}
+          alt="The K Grand Hotel"
           referrerPolicy="no-referrer"
           className="absolute inset-0 w-full h-full object-cover opacity-50"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/40 to-stone-950/80" />
         <div className="relative z-10 max-w-3xl mx-auto px-4 text-center space-y-3">
           <span className="text-xs uppercase tracking-[0.25em] text-amber-300 font-medium">
-            Estate Living
+            Stay in Comfort
           </span>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-white font-light">
             Amenities & Facilities
           </h1>
           <p className="text-xs sm:text-sm text-stone-300 max-w-xl mx-auto leading-relaxed">
-            Elevating your stay through holistic wellness, gastronomic marvels, and bespoke leisure.
+            A sauna, a pool, free parking, EV charging, and apartment-style rooms with a private terrace or balcony.
           </p>
         </div>
       </section>
@@ -263,7 +263,7 @@ export const AmenitiesPage: React.FC = () => {
                     onClick={() => navigateTo('contact')}
                     className="text-xs font-semibold uppercase tracking-wider text-stone-900 hover:text-amber-800 inline-flex items-center gap-1.5"
                   >
-                    <span>Inquire with Concierge</span>
+                    <span>Ask Our Front Desk</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
@@ -287,8 +287,8 @@ export const OffersPage: React.FC = () => {
       {/* Banner */}
       <section className="relative h-80 sm:h-96 flex items-center justify-center overflow-hidden bg-stone-950">
         <img
-          src={IMAGES.oceanVilla}
-          alt="Aurelia special offers"
+          src={IMAGES.galleryRoom2}
+          alt="Guest room at The K Grand Hotel"
           referrerPolicy="no-referrer"
           className="absolute inset-0 w-full h-full object-cover opacity-45"
         />
@@ -298,10 +298,10 @@ export const OffersPage: React.FC = () => {
             Exclusive Packages
           </span>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-white font-light">
-            Seasonal Offers & Privileges
+            Special Offers
           </h1>
           <p className="text-xs sm:text-sm text-stone-300 max-w-xl mx-auto leading-relaxed">
-            Curated stays pairing luxury suites with exceptional dining, thalasso spa therapies, and private excursions.
+            Better rates for direct bookings, weekend getaways, and longer stays in Clark.
           </p>
         </div>
       </section>
@@ -387,7 +387,7 @@ export const GalleryPage: React.FC = () => {
   const { openLightbox } = useHotel();
   const [activeCategory, setActiveCategory] = useState<string>('All');
 
-  const categories = ['All', 'Suites & Villas', 'Dining & Bars', 'Spa & Wellness', 'Resort Grounds'];
+  const categories = ['All', 'Rooms', 'Lobby & Interiors', 'Hotel Exterior'];
 
   const filteredItems = GALLERY_ITEMS.filter((item) => {
     if (activeCategory === 'All') return true;
@@ -399,8 +399,8 @@ export const GalleryPage: React.FC = () => {
       {/* Banner */}
       <section className="relative h-72 sm:h-80 flex items-center justify-center overflow-hidden bg-stone-950">
         <img
-          src={IMAGES.beachClub}
-          alt="Aurelia photo gallery"
+          src={IMAGES.location}
+          alt="The K Grand Hotel at dusk"
           referrerPolicy="no-referrer"
           className="absolute inset-0 w-full h-full object-cover opacity-45"
         />
@@ -410,10 +410,10 @@ export const GalleryPage: React.FC = () => {
             Visual Story
           </span>
           <h1 className="text-3xl sm:text-4xl font-serif text-white font-light">
-            Estate Photo Gallery
+            Photo Gallery
           </h1>
           <p className="text-xs sm:text-sm text-stone-300 max-w-md mx-auto">
-            Discover our seaside panoramas, bespoke living suites, and fine dining atmospheres.
+            Take a look at our rooms, lobby, and hotel in Clark Freeport Zone.
           </p>
         </div>
       </section>
@@ -703,7 +703,7 @@ export const FaqsPage: React.FC = () => {
           Frequently Asked Questions
         </h1>
         <p className="text-xs text-stone-500 max-w-md mx-auto">
-          Answers to common questions regarding check-in procedures, transfers, dining, and policies.
+          Answers to common questions about check-in, cancellations, parking, and getting here.
         </p>
       </div>
 
@@ -752,13 +752,13 @@ export const LegalPage: React.FC<{ type: 'privacy' | 'terms' }> = ({ type }) => 
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-8">
       <div>
         <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold block mb-1">
-          Estate Governance
+          Hotel Policies
         </span>
         <h1 className="text-3xl font-serif text-stone-900">
           {isPrivacy ? 'Guest Privacy Policy' : 'Terms & Conditions of Stay'}
         </h1>
         <p className="text-xs text-stone-500 mt-1">
-          Last revised: October 2026 · French Riviera Estate Jurisdictions
+          Last revised: October 2026
         </p>
       </div>
 
@@ -766,29 +766,33 @@ export const LegalPage: React.FC<{ type: 'privacy' | 'terms' }> = ({ type }) => 
         {isPrivacy ? (
           <>
             <p>
-              At Aurelia Grand Hotel & Residences, we hold the discretion and confidential privacy of our guests as a foundational cornerstone of luxury hospitality.
+              The K Grand Hotel respects your privacy and handles your personal information in accordance with the Philippine Data Privacy Act of 2012 (Republic Act No. 10173).
             </p>
-            <h3 className="font-serif text-base text-stone-900 font-semibold">1. Collection of Stay Information</h3>
+            <h3 className="font-serif text-base text-stone-900 font-semibold">1. Information We Collect</h3>
             <p>
-              We collect guest personal information solely to facilitate seamless reservations, personalize in-suite amenities (such as pillow menu choices and dietary requirements), and ensure the security of our private estate.
+              We collect the details you give us, such as your name, contact information, stay dates, and special requests, only to process your reservation, prepare for your arrival, and keep our guests and property safe.
             </p>
-            <h3 className="font-serif text-base text-stone-900 font-semibold">2. Confidentiality & Non-Disclosure</h3>
+            <h3 className="font-serif text-base text-stone-900 font-semibold">2. How We Protect It</h3>
             <p>
-              We maintain a strict non-disclosure protocol. Guest identities, booking records, and itineraries are never sold, rented, or distributed to third parties.
+              Your booking records and contact details are never sold or rented to third parties. They are shared only when needed to complete your stay or when required by law.
+            </p>
+            <h3 className="font-serif text-base text-stone-900 font-semibold">3. Your Rights</h3>
+            <p>
+              You may ask to access, correct, or delete your personal information at any time by contacting us at {HOTEL_INFO.inquiriesEmail} or {HOTEL_INFO.phone}.
             </p>
           </>
         ) : (
           <>
             <p>
-              Welcome to Aurelia Grand Hotel & Residences. By confirming a reservation via this prototype platform or directly through our concierge, you agree to our standard terms of stay.
+              Welcome to The K Grand Hotel. By confirming a reservation on this website or directly with our front desk, you agree to the following terms of stay.
             </p>
             <h3 className="font-serif text-base text-stone-900 font-semibold">1. Check-In & Check-Out Schedule</h3>
             <p>
-              Official check-in commences at 15:00 local time. Check-out is scheduled for 12:00 noon. Complimentary early check-in or late check-out may be granted subject to suite availability and confirmed by the Front Office.
+              Check-in starts at 15:00 and check-out is at 12:00 noon (Philippine time). Early check-in or late check-out may be arranged subject to room availability and confirmation by the front desk.
             </p>
-            <h3 className="font-serif text-base text-stone-900 font-semibold">2. Flexible Cancellation Guarantee</h3>
+            <h3 className="font-serif text-base text-stone-900 font-semibold">2. Cancellation Policy</h3>
             <p>
-              Standard flexible reservations may be cancelled without penalty up to 48 hours prior to arrival (15:00 local French time). Cancellations within 48 hours will incur a fee equivalent to one night's room charge.
+              Standard reservations may be cancelled free of charge up to 48 hours before arrival (15:00 Philippine time). Cancellations within 48 hours are charged one night's room rate.
             </p>
           </>
         )}

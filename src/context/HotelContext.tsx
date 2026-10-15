@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Room, ROOMS, SPECIAL_OFFERS, SpecialOffer, BookingAddOn, BOOKING_ADDONS } from '../data/hotelData';
+import { Room, ROOMS, SpecialOffer, BookingAddOn } from '../data/hotelData';
 
 export type Page =
   | 'home'
@@ -69,7 +69,7 @@ export interface UserProfile {
   email: string;
   phone: string;
   country: string;
-  membershipTier: 'Aurelia Ambassador' | 'Aurelia Elite' | 'Aurelia Member';
+  membershipTier: 'K Grand Member';
   memberSince: string;
   stayCount: number;
   preferences: {
@@ -112,85 +112,28 @@ const defaultSearch: SearchState = {
   category: 'All',
 };
 
+// Demo guest used by the sign-in prototype until real accounts are connected.
 const defaultUser: UserProfile = {
   isLoggedIn: false,
-  title: 'Lord',
-  firstName: 'Alexander',
-  lastName: 'Vane-Tempest',
-  email: 'alexander.vane@heritage.co.uk',
-  phone: '+44 20 7946 0912',
-  country: 'United Kingdom',
-  membershipTier: 'Aurelia Elite',
-  memberSince: '2024',
-  stayCount: 3,
+  title: 'Mr.',
+  firstName: 'Juan',
+  lastName: 'Dela Cruz',
+  email: 'juan.delacruz@example.com',
+  phone: '+63 917 123 4567',
+  country: 'Philippines',
+  membershipTier: 'K Grand Member',
+  memberSince: '2026',
+  stayCount: 0,
   preferences: {
-    pillow: 'Feather & Goose Down (Firm)',
-    floor: 'High Floor (Penthouse / Top Tier)',
-    newspaper: 'Financial Times & Le Figaro',
-    dietary: 'No shellfish, sparkling mineral water on arrival',
-    specialOccasion: 'Wedding Anniversary'
+    pillow: 'Standard',
+    floor: 'No Preference',
+    newspaper: '',
+    dietary: '',
+    specialOccasion: ''
   }
 };
 
-const initialBookings: BookingRecord[] = [
-  {
-    reference: 'AUR-8429-X',
-    room: ROOMS[0], // Presidential Suite
-    checkIn: '2026-11-12',
-    checkOut: '2026-11-16',
-    nights: 4,
-    adults: 2,
-    children: 0,
-    roomsCount: 1,
-    guestInfo: {
-      title: 'Lord',
-      firstName: 'Alexander',
-      lastName: 'Vane-Tempest',
-      email: 'alexander.vane@heritage.co.uk',
-      phone: '+44 20 7946 0912',
-      country: 'United Kingdom',
-      specialRequests: 'High floor preferred, sparkling San Pellegrino in suite on arrival.',
-      estimatedArrival: '15:30'
-    },
-    addons: [BOOKING_ADDONS[0], BOOKING_ADDONS[1]], // Breakfast + Limousine
-    appliedOffer: SPECIAL_OFFERS[0],
-    baseAmount: 3800,
-    taxAmount: 380,
-    serviceCharge: 190,
-    totalAmount: 4370,
-    status: 'Confirmed',
-    createdAt: '2026-09-15',
-    paymentMethod: 'Credit Card (ending in 8842)'
-  },
-  {
-    reference: 'AUR-3105-V',
-    room: ROOMS[1], // Deluxe Ocean Villa
-    checkIn: '2026-06-20',
-    checkOut: '2026-06-25',
-    nights: 5,
-    adults: 2,
-    children: 1,
-    roomsCount: 1,
-    guestInfo: {
-      title: 'Lord',
-      firstName: 'Alexander',
-      lastName: 'Vane-Tempest',
-      email: 'alexander.vane@heritage.co.uk',
-      phone: '+44 20 7946 0912',
-      country: 'United Kingdom',
-      specialRequests: 'Baby cot setup in second dressing quarter.',
-      estimatedArrival: '14:00'
-    },
-    addons: [BOOKING_ADDONS[0]],
-    baseAmount: 6750,
-    taxAmount: 675,
-    serviceCharge: 337,
-    totalAmount: 7762,
-    status: 'Completed',
-    createdAt: '2026-05-10',
-    paymentMethod: 'American Express (ending in 1004)'
-  }
-];
+const initialBookings: BookingRecord[] = [];
 
 const HotelContext = createContext<HotelContextType | undefined>(undefined);
 
@@ -251,7 +194,7 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       firstName: name ? name.split(' ')[0] : prev.firstName,
       lastName: name && name.split(' ').length > 1 ? name.split(' ').slice(1).join(' ') : prev.lastName,
     }));
-    showNotification('Welcome back to Aurelia Grand Hotel & Residences.');
+    showNotification('Welcome back to The K Grand Hotel.');
   };
 
   const logoutUser = () => {

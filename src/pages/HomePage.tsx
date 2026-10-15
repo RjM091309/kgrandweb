@@ -120,14 +120,14 @@ export const HomePage: React.FC = () => {
             <div className="flex items-center gap-3">
               <span className="h-px w-10 bg-amber-300" />
               <span className="text-xs uppercase tracking-[0.3em] font-medium text-amber-300">
-                A Private Sanctuary on the French Riviera
+                Clark Freeport Zone, Pampanga
               </span>
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-white font-serif tracking-tight font-light leading-[1.05] text-balance">
               Discover Your <span className="italic text-amber-200">Perfect</span> Escape.
             </h1>
             <p className="text-sm sm:text-base text-stone-200/90 font-light max-w-xl leading-relaxed">
-              Where rugged limestone cliffs meet the infinite sapphire sea. Experience Michelin-starred gastronomy, bespoke wellness sanctuaries, and residential privacy tailored to your desires.
+              {HOTEL_INFO.welcomeText}
             </p>
 
             {/* Value Highlights */}
@@ -138,11 +138,11 @@ export const HomePage: React.FC = () => {
               </li>
               <li className="flex items-center gap-3">
                 <Sparkles className="w-4 h-4 text-amber-300 shrink-0" />
-                <span>Complimentary Concierge & Butler Service</span>
+                <span>Minutes from Clark International Airport</span>
               </li>
               <li className="flex items-center gap-3">
                 <Sun className="w-4 h-4 text-amber-300 shrink-0" />
-                <span>Private Beach & Saltwater Horizon Pool</span>
+                <span>Sauna, Pool, Free Parking & EV Charging</span>
               </li>
             </ul>
           </div>
@@ -154,15 +154,15 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 2. Featured Rooms and Suites */}
+      {/* 2. Featured Rooms */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
           <div>
             <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold block mb-2">
-              Exceptional Sanctuaries
+              Our Rooms
             </span>
             <h2 className="text-3xl sm:text-4xl font-serif text-stone-900 font-normal">
-              Featured Rooms & Suites
+              Featured Rooms
             </h2>
           </div>
           <button
@@ -490,10 +490,10 @@ export const HomePage: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
           <div>
             <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold block mb-1">
-              Visual Chronicle
+              Photo Gallery
             </span>
             <h2 className="text-3xl font-serif text-stone-900">
-              The Estate in Focus
+              A Look Inside K Grand
             </h2>
           </div>
           <button
@@ -536,7 +536,8 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 7. Guest Reviews and Testimonials */}
+      {/* 7. Guest Reviews and Testimonials (hidden until real reviews are added to REVIEWS) */}
+      {REVIEWS.length > 0 && (
       <section className="bg-stone-100/80 py-20 border-y border-stone-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-14 space-y-2">
@@ -544,7 +545,7 @@ export const HomePage: React.FC = () => {
               Guest Impressions
             </span>
             <h2 className="text-3xl sm:text-4xl font-serif text-stone-900">
-              Reflections of Elegance
+              What Our Guests Say
             </h2>
             <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 pt-1 text-xs text-stone-600">
               <div className="flex text-amber-500">
@@ -597,6 +598,7 @@ export const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* 8. Location & Nearby Attractions */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

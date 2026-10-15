@@ -92,21 +92,21 @@ export const RoomsPage: React.FC = () => {
       {/* 1. Header Banner */}
       <section className="relative h-72 sm:h-80 lg:h-96 flex items-center justify-center overflow-hidden bg-stone-950">
         <img
-          src={IMAGES.cliffsideVilla}
-          alt="Aurelia suites banner"
+          src={IMAGES.galleryRoom2}
+          alt="Guest room at The K Grand Hotel"
           referrerPolicy="no-referrer"
           className="absolute inset-0 w-full h-full object-cover opacity-45"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/40 to-stone-950/80" />
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center space-y-3">
           <span className="text-xs uppercase tracking-[0.25em] text-amber-300 font-medium">
-            Accommodations & Residences
+            Accommodations
           </span>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-white font-light">
-            Rooms & Private Suites
+            Our Rooms
           </h1>
           <p className="text-xs sm:text-sm text-stone-300 max-w-xl mx-auto leading-relaxed">
-            Crafted for sensory stillness, each space balances noble natural materials, custom furnishings, and cinematic sea panoramas.
+            Apartment-style rooms with air-conditioning, a private bathroom, a work desk, and your own terrace or balcony.
           </p>
         </div>
       </section>
@@ -321,7 +321,7 @@ export const RoomsPage: React.FC = () => {
                   No accommodations match your filter criteria.
                 </p>
                 <p className="text-xs text-stone-500 max-w-sm mx-auto">
-                  Try adjusting your price ceiling or resetting filters to see all available luxury suites.
+                  Try adjusting your price ceiling or resetting filters to see all available rooms.
                 </p>
                 <button
                   onClick={resetFilters}

@@ -23,17 +23,17 @@ import { Select } from '../components/Select';
 // 1. Sign In Page
 export const SignInPage: React.FC = () => {
   const { loginUser, navigateTo } = useHotel();
-  const [email, setEmail] = useState('alexander.vane@heritage.co.uk');
-  const [password, setPassword] = useState('••••••••••••');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    loginUser(email, 'Alexander Vane-Tempest');
+    loginUser(email);
     navigateTo('profile');
   };
 
   const handleDemoSignIn = () => {
-    loginUser('alexander.vane@heritage.co.uk', 'Alexander Vane-Tempest');
+    loginUser('juan.delacruz@example.com', 'Juan Dela Cruz');
     navigateTo('profile');
   };
 
@@ -42,13 +42,13 @@ export const SignInPage: React.FC = () => {
       <div className="bg-white p-8 rounded-2xl border border-stone-200 shadow-xl space-y-6">
         <div className="text-center space-y-2">
           <span className="text-[10px] uppercase tracking-[0.25em] text-amber-700 font-semibold block">
-            Aurelia Club Elite
+            K Grand Guest Account
           </span>
           <h1 className="text-2xl sm:text-3xl font-serif text-stone-900">
             Guest Sign In
           </h1>
           <p className="text-xs text-stone-500">
-            Access your reserved suites, bespoke preferences, and member benefits.
+            View your reservations and manage your stay preferences.
           </p>
         </div>
 
@@ -56,7 +56,7 @@ export const SignInPage: React.FC = () => {
         <div className="p-3 bg-amber-50 rounded-xl border border-amber-200/80 text-xs text-amber-900 flex items-center justify-between">
           <div>
             <p className="font-semibold">Prototype Guest Demo:</p>
-            <p className="text-[11px] text-amber-800">Pre-populated with Elite Tier guest data</p>
+            <p className="text-[11px] text-amber-800">Signs in with a sample guest account</p>
           </div>
           <button
             type="button"
@@ -143,7 +143,7 @@ export const RegisterPage: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     loginUser(form.email, `${form.firstName} ${form.lastName}`);
-    showNotification('Welcome! Your Aurelia Club profile has been initialized.');
+    showNotification('Welcome! Your K Grand guest account has been created.');
     navigateTo('profile');
   };
 
@@ -152,13 +152,13 @@ export const RegisterPage: React.FC = () => {
       <div className="bg-white p-8 rounded-2xl border border-stone-200 shadow-xl space-y-6">
         <div className="text-center space-y-2">
           <span className="text-[10px] uppercase tracking-[0.25em] text-amber-700 font-semibold block">
-            Membership Privileges
+            Guest Account
           </span>
           <h1 className="text-2xl sm:text-3xl font-serif text-stone-900">
             Create Guest Account
           </h1>
           <p className="text-xs text-stone-500">
-            Join the Aurelia Society for preferred suite rates, room upgrades, and priority reservations.
+            Create an account to book faster and keep track of your reservations.
           </p>
         </div>
 
@@ -185,7 +185,7 @@ export const RegisterPage: React.FC = () => {
                 value={form.firstName}
                 onChange={(e) => setForm({ ...form, firstName: e.target.value })}
                 className="w-full bg-stone-50 border border-stone-200 rounded-lg p-2 text-stone-900"
-                placeholder="Alexander"
+                placeholder="Juan"
               />
             </div>
           </div>
@@ -198,7 +198,7 @@ export const RegisterPage: React.FC = () => {
               value={form.lastName}
               onChange={(e) => setForm({ ...form, lastName: e.target.value })}
               className="w-full bg-stone-50 border border-stone-200 rounded-lg p-2 text-stone-900"
-              placeholder="Sterling"
+              placeholder="Dela Cruz"
             />
           </div>
 
@@ -210,7 +210,7 @@ export const RegisterPage: React.FC = () => {
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               className="w-full bg-stone-50 border border-stone-200 rounded-lg p-2 text-stone-900"
-              placeholder="alexander@example.com"
+              placeholder="juan@example.com"
             />
           </div>
 
@@ -227,17 +227,17 @@ export const RegisterPage: React.FC = () => {
           </div>
 
           <div className="p-3 bg-stone-50 rounded-lg text-[11px] text-stone-500 space-y-1">
-            <p className="font-semibold text-stone-700">Member Inclusions:</p>
-            <p>✓ Complimentary welcome glass of Dom Pérignon</p>
-            <p>✓ Guaranteed 14:00 late check-out upon availability</p>
-            <p>✓ 15% discount across estate thalasso treatments</p>
+            <p className="font-semibold text-stone-700">With a guest account you can:</p>
+            <p>✓ Save your details for faster booking</p>
+            <p>✓ View and manage your reservations</p>
+            <p>✓ Keep your room preferences on file</p>
           </div>
 
           <button
             type="submit"
             className="w-full py-3 text-xs uppercase tracking-wider font-semibold bg-stone-900 hover:bg-stone-800 text-white rounded-lg transition-colors shadow-md"
           >
-            Create My Membership
+            Create My Account
           </button>
         </form>
 
@@ -376,14 +376,14 @@ export const ProfilePage: React.FC = () => {
             {user.title} {user.firstName} {user.lastName}
           </h1>
           <p className="text-xs text-stone-400 mt-1">
-            Member since {user.memberSince} · {user.stayCount} completed stays at Aurelia Grand
+            Member since {user.memberSince} · {user.stayCount} completed stays at The K Grand Hotel
           </p>
         </div>
 
         <div className="bg-stone-950/80 px-4 py-3 rounded-xl border border-stone-800 text-xs space-y-1">
-          <p className="text-amber-300 font-medium">Aurelia Privilege Tier</p>
-          <p className="text-stone-300">Dedicated Clefs d'Or Butler</p>
-          <p className="text-stone-400 text-[10px]">Guaranteed 16:00 Late Check-out</p>
+          <p className="text-amber-300 font-medium">Need help with your stay?</p>
+          <p className="text-stone-300">{HOTEL_INFO.phone}</p>
+          <p className="text-stone-400 text-[10px]">{HOTEL_INFO.reservationsEmail}</p>
         </div>
       </div>
 
@@ -409,7 +409,7 @@ export const ProfilePage: React.FC = () => {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
             <div>
-              <label className="block text-[11px] font-medium text-stone-600 mb-1">Honorific Title</label>
+              <label className="block text-[11px] font-medium text-stone-600 mb-1">Title</label>
               <input
                 type="text"
                 value={profileForm.title}
@@ -459,47 +459,48 @@ export const ProfilePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Personalized Hospitality & Suite Preferences */}
+        {/* Stay Preferences */}
         <div className="space-y-4 pt-6 border-t border-stone-200">
           <div>
             <h2 className="text-lg font-serif text-stone-900">
-              Personalized Hospitality & Stay Rituals
+              Stay Preferences
             </h2>
             <p className="text-xs text-stone-500 mt-0.5">
-              These preferences automatically configure every reservation booked under your account.
+              We will use these preferences to prepare your room for future stays.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
-              <label className="block text-[11px] font-medium text-stone-600 mb-1">Pillow Menu Preference</label>
+              <label className="block text-[11px] font-medium text-stone-600 mb-1">Pillow Preference</label>
               <Select
                 value={String(profileForm.pillow)}
                 onChange={(v) => setProfileForm({ ...profileForm, pillow: v })}
                 options={[
-                  { value: "Feather & Goose Down (Firm)", label: "Feather & Goose Down (Firm)" },
-                  { value: "Hypoallergenic Microfiber", label: "Hypoallergenic Microfiber" },
-                  { value: "Memory Foam Ergonomic", label: "Memory Foam Ergonomic" },
-                  { value: "Silk Lavender Infused", label: "Silk Lavender Infused" },
+                  { value: "Standard", label: "Standard" },
+                  { value: "Firm", label: "Firm" },
+                  { value: "Soft", label: "Soft" },
+                  { value: "Extra Pillows", label: "Extra Pillows" },
                 ]}
               />
             </div>
 
             <div>
-              <label className="block text-[11px] font-medium text-stone-600 mb-1">Suite Floor Placement</label>
+              <label className="block text-[11px] font-medium text-stone-600 mb-1">Room Location</label>
               <Select
                 value={String(profileForm.floor)}
                 onChange={(v) => setProfileForm({ ...profileForm, floor: v })}
                 options={[
-                  { value: "High Floor (Penthouse / Top Tier)", label: "High Floor (Penthouse / Top Tier)" },
-                  { value: "Direct Garden / Ground Access", label: "Direct Garden / Ground Access" },
-                  { value: "Secluded Corner Sanctuary", label: "Secluded Corner Sanctuary" },
+                  { value: "No Preference", label: "No Preference" },
+                  { value: "Higher Floor", label: "Higher Floor" },
+                  { value: "Ground Floor", label: "Ground Floor" },
+                  { value: "Quiet Room", label: "Quiet Room" },
                 ]}
               />
             </div>
 
             <div>
-              <label className="block text-[11px] font-medium text-stone-600 mb-1">Morning Newspaper Delivery</label>
+              <label className="block text-[11px] font-medium text-stone-600 mb-1">Other Room Requests</label>
               <input
                 type="text"
                 value={profileForm.newspaper}
@@ -509,7 +510,7 @@ export const ProfilePage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-[11px] font-medium text-stone-600 mb-1">Dietary & Bar Preferences</label>
+              <label className="block text-[11px] font-medium text-stone-600 mb-1">Allergies or Health Notes</label>
               <input
                 type="text"
                 value={profileForm.dietary}
@@ -553,7 +554,7 @@ export const MyBookingsPage: React.FC = () => {
           onClick={() => navigateTo('rooms')}
           className="px-4 py-2 bg-amber-300 hover:bg-amber-200 text-stone-950 font-semibold text-xs rounded uppercase tracking-wider transition-colors self-start"
         >
-          Book New Suite
+          Book a Room
         </button>
       </div>
 
@@ -582,7 +583,7 @@ export const MyBookingsPage: React.FC = () => {
                 key={booking.reference}
                 className="bg-white rounded-sm border border-transparent shadow-[0_10px_20px_-8px_rgb(0_0_0/0.18),0_2px_4px_-2px_rgb(0_0_0/0.06)] p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hover:-translate-y-0.5 hover:shadow-[0_16px_28px_-10px_rgb(0_0_0/0.22),0_2px_6px_-2px_rgb(0_0_0/0.08)] transition-all duration-300"
               >
-                {/* Left: Suite info and thumbnail */}
+                {/* Left: Room info and thumbnail */}
                 <div className="flex items-start gap-4">
                   <img
                     src={booking.room.images[0]}
@@ -670,7 +671,7 @@ export const MyBookingsPage: React.FC = () => {
             <div className="flex items-start justify-between pb-4 border-b border-stone-100">
               <div>
                 <span className="text-[10px] font-mono uppercase text-amber-800">
-                  Reservation Dossier
+                  Reservation Details
                 </span>
                 <h3 className="text-xl font-serif text-stone-900 mt-0.5">
                   {selectedBookingForDetails.reference}

@@ -1,6 +1,0 @@
-{
-  "name": "Aurelia Grand Hotel & Residences",
-  "description": "A luxury 5-star seaside hotel booking website featuring bespoke suites, panoramic ocean villas, Michelin-inspired dining, and seamless guest reservation flows.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}

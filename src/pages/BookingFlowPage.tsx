@@ -45,13 +45,13 @@ export const BookingFlowPage: React.FC = () => {
 
   // Guest details form state
   const [guestForm, setGuestForm] = useState<GuestInfo>({
-    title: user.title || 'Lord',
-    firstName: user.firstName || 'Alexander',
-    lastName: user.lastName || 'Vane-Tempest',
-    email: user.email || 'alexander.vane@heritage.co.uk',
-    phone: user.phone || '+44 20 7946 0912',
-    country: user.country || 'United Kingdom',
-    specialRequests: user.preferences?.specialOccasion ? `Celebrating ${user.preferences.specialOccasion}.` : 'Quiet high-floor suite preferred.',
+    title: user.isLoggedIn ? user.title : 'Mr.',
+    firstName: user.isLoggedIn ? user.firstName : '',
+    lastName: user.isLoggedIn ? user.lastName : '',
+    email: user.isLoggedIn ? user.email : '',
+    phone: user.isLoggedIn ? user.phone : '',
+    country: user.isLoggedIn ? user.country : 'Philippines',
+    specialRequests: user.isLoggedIn && user.preferences.specialOccasion ? `Celebrating ${user.preferences.specialOccasion}.` : '',
     estimatedArrival: '15:00',
   });
 
@@ -96,15 +96,15 @@ export const BookingFlowPage: React.FC = () => {
     const foundOffer = SPECIAL_OFFERS.find((o) => o.promoCode.toUpperCase() === code);
     if (foundOffer) {
       setAppliedPromo(foundOffer);
-      showNotification(`Offer applied: ${foundOffer.discountPercentage}% discount on suite rate!`);
+      showNotification(`Offer applied: ${foundOffer.discountPercentage}% discount on your room rate!`);
     } else {
-      setPromoError('Invalid promotion code. Try "ROMANCE25" or "EARLYBIRD20"');
+      setPromoError('Invalid promotion code. Please check the code and try again.');
     }
   };
 
   const handleConfirmReservation = () => {
     const randomRefNum = Math.floor(1000 + Math.random() * 9000);
-    const newRef = `AUR-${randomRefNum}-X`;
+    const newRef = `KGH-${randomRefNum}`;
 
     const record: BookingRecord = {
       reference: newRef,
@@ -129,7 +129,7 @@ export const BookingFlowPage: React.FC = () => {
           ? 'Credit Card (ending in 8842)'
           : paymentMethod === 'apple_pay'
           ? 'Apple Pay (Verified)'
-          : 'Pay on Arrival at Aurelia Concierge'
+          : 'Pay on Arrival at the Front Desk'
     };
 
     setConfirmedRecord(record);
@@ -138,8 +138,8 @@ export const BookingFlowPage: React.FC = () => {
   };
 
   const stepTitles = [
-    'Stay & Suite',
-    'Curated Inclusions',
+    'Stay & Room',
+    'Add-Ons',
     'Guest Details',
     'Payment Preview',
     'Confirmation'
@@ -193,7 +193,7 @@ export const BookingFlowPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Interactive Column */}
         <div className={currentStep === 5 ? 'lg:col-span-12' : 'lg:col-span-8'}>
-          {/* STEP 1: Dates & Suite Selection */}
+          {/* STEP 1: Dates & Room Selection */}
           {currentStep === 1 && (
             <div className="bg-white rounded-2xl p-5 sm:p-8 border border-stone-200 shadow-sm space-y-6">
               <div>
@@ -201,10 +201,10 @@ export const BookingFlowPage: React.FC = () => {
                   Step 1 of 4
                 </span>
                 <h2 className="text-2xl font-serif text-stone-900">
-                  Confirm Dates & Select Sanctuary
+                  Confirm Dates & Choose Your Room
                 </h2>
                 <p className="text-xs text-stone-500 mt-1">
-                  Tailor your stay schedule and choose among our bespoke suites and villas.
+                  Check your dates and pick the room that suits your stay.
                 </p>
               </div>
 
@@ -218,9 +218,9 @@ export const BookingFlowPage: React.FC = () => {
                   className="sm:col-span-2"
                 />
                 <div>
-                  <label className="block text-[10px] uppercase tracking-wider text-stone-500">Guests & Suites</label>
+                  <label className="block text-[10px] uppercase tracking-wider text-stone-500">Guests & Rooms</label>
                   <p className="font-semibold text-stone-900 mt-1">
-                    {searchState.adults} Adults · {searchState.roomsCount} Suite
+                    {searchState.adults} Adults · {searchState.roomsCount} {searchState.roomsCount > 1 ? 'Rooms' : 'Room'}
                   </p>
                 </div>
               </div>
@@ -280,7 +280,7 @@ export const BookingFlowPage: React.FC = () => {
                   onClick={() => setCurrentStep(2)}
                   className="w-full sm:w-auto justify-center px-6 py-3 text-xs uppercase tracking-wider font-semibold bg-stone-900 hover:bg-stone-800 text-white rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
                 >
-                  <span>Continue<span className="hidden min-[400px]:inline"> to Enhancements</span></span>
+                  <span>Continue<span className="hidden min-[400px]:inline"> to Add-Ons</span></span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
@@ -295,10 +295,10 @@ export const BookingFlowPage: React.FC = () => {
                   Step 2 of 4
                 </span>
                 <h2 className="text-2xl font-serif text-stone-900">
-                  Curated Inclusions & Add-Ons
+                  Add-Ons & Promo Code
                 </h2>
                 <p className="text-xs text-stone-500 mt-1">
-                  Customize your arrival and stay with tailored gastronomic and wellness rituals.
+                  Add extras to make your stay easier. All add-ons are optional.
                 </p>
               </div>
 
@@ -348,12 +348,12 @@ export const BookingFlowPage: React.FC = () => {
               <div className="pt-4 border-t border-stone-100">
                 <form onSubmit={handleApplyPromo} className="space-y-2">
                   <label className="block text-xs font-semibold text-stone-700">
-                    Have a Promotional Code or Guest Privilege Pass?
+                    Have a Promo Code?
                   </label>
                   <div className="flex gap-2 max-w-md">
                     <input
                       type="text"
-                      placeholder="e.g. ROMANCE25 or EARLYBIRD20"
+                      placeholder="Enter promo code"
                       value={promoCodeInput}
                       onChange={(e) => setPromoCodeInput(e.target.value)}
                       className="w-full bg-stone-50 border border-stone-200 rounded-lg px-3 py-2 text-xs uppercase font-mono tracking-wider focus:outline-none focus:border-amber-500"
@@ -406,10 +406,10 @@ export const BookingFlowPage: React.FC = () => {
                   Step 3 of 4
                 </span>
                 <h2 className="text-2xl font-serif text-stone-900">
-                  Guest Information & Preferences
+                  Guest Information
                 </h2>
                 <p className="text-xs text-stone-500 mt-1">
-                  Our private butler and concierge prepare your suite according to your exact specifications.
+                  Tell us who is staying so we can prepare your room.
                 </p>
               </div>
 
@@ -425,8 +425,6 @@ export const BookingFlowPage: React.FC = () => {
                         { value: "Ms.", label: "Ms." },
                         { value: "Mrs.", label: "Mrs." },
                         { value: "Dr.", label: "Dr." },
-                        { value: "Lord", label: "Lord" },
-                        { value: "Lady", label: "Lady" },
                       ]}
                       className="text-xs"
                     />
@@ -505,13 +503,13 @@ export const BookingFlowPage: React.FC = () => {
 
                 <div>
                   <label className="block text-[11px] font-medium text-stone-700 mb-1">
-                    Special Inquiries & Dietary / Room Preferences
+                    Special Requests
                   </label>
                   <textarea
                     rows={3}
                     value={guestForm.specialRequests}
                     onChange={(e) => setGuestForm({ ...guestForm, specialRequests: e.target.value })}
-                    placeholder="e.g. Celebrating an anniversary, feather pillows preferred, quiet top-floor placement..."
+                    placeholder="e.g. Early arrival, extra pillows, a room on a higher floor..."
                     className="w-full bg-stone-50 border border-stone-200 rounded-lg p-2.5 text-xs text-stone-900 focus:outline-none focus:border-amber-500"
                   />
                 </div>
@@ -659,7 +657,7 @@ export const BookingFlowPage: React.FC = () => {
                 <label className="flex items-start gap-2 cursor-pointer">
                   <input type="checkbox" defaultChecked className="mt-0.5 accent-amber-600" />
                   <span>
-                    I accept the Aurelia Grand cancellation terms (Complimentary cancellation up to 48 hours before check-in) and privacy policy.
+                    I accept The K Grand Hotel cancellation terms (Complimentary cancellation up to 48 hours before check-in) and privacy policy.
                   </span>
                 </label>
               </div>
@@ -705,7 +703,7 @@ export const BookingFlowPage: React.FC = () => {
                   <span className="font-mono font-bold text-stone-900 text-sm px-2 py-0.5 bg-stone-100 rounded border border-stone-200">
                     {confirmedRecord.reference}
                   </span>
-                  . A confirmation packet has been dispatched to {confirmedRecord.guestInfo.email}.
+                  . A confirmation has been sent to {confirmedRecord.guestInfo.email}.
                 </p>
               </div>
 
@@ -714,7 +712,7 @@ export const BookingFlowPage: React.FC = () => {
                 {/* Stay Summary */}
                 <div className="space-y-4 p-5 bg-stone-50 rounded-xl border border-stone-200/80">
                   <h3 className="font-serif text-base font-semibold text-stone-900">
-                    Stay Specifications
+                    Stay Details
                   </h3>
                   <div className="space-y-2">
                     <div className="flex justify-between">
@@ -730,7 +728,7 @@ export const BookingFlowPage: React.FC = () => {
                     <div className="flex justify-between">
                       <span className="text-stone-500">Occupancy:</span>
                       <span className="font-semibold text-stone-900">
-                        {confirmedRecord.adults} Adults, {confirmedRecord.children} Children ({confirmedRecord.roomsCount} Suite)
+                        {confirmedRecord.adults} Adults, {confirmedRecord.children} Children ({confirmedRecord.roomsCount} {confirmedRecord.roomsCount > 1 ? 'Rooms' : 'Room'})
                       </span>
                     </div>
                     <div className="flex justify-between">
@@ -768,16 +766,16 @@ export const BookingFlowPage: React.FC = () => {
                     </div>
                     {addonsSubtotal > 0 && (
                       <div className="flex justify-between">
-                        <span className="text-stone-500">Enhancements:</span>
+                        <span className="text-stone-500">Add-Ons:</span>
                         <span className="tabular-nums font-semibold text-stone-900">₱{addonsSubtotal.toLocaleString()}</span>
                       </div>
                     )}
                     <div className="flex justify-between">
-                      <span className="text-stone-500">Hospitality Tax (10%):</span>
+                      <span className="text-stone-500">Taxes (10%):</span>
                       <span className="tabular-nums font-semibold text-stone-900">₱{confirmedRecord.taxAmount.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-stone-500">Estate Service (5%):</span>
+                      <span className="text-stone-500">Service Charge (5%):</span>
                       <span className="tabular-nums font-semibold text-stone-900">₱{confirmedRecord.serviceCharge.toLocaleString()}</span>
                     </div>
                     <div className="pt-2 border-t border-stone-200 flex justify-between text-sm">
@@ -844,7 +842,7 @@ export const BookingFlowPage: React.FC = () => {
                 Reservation Summary
               </h3>
 
-              {/* Suite preview */}
+              {/* Room preview */}
               <div className="flex gap-3">
                 <img
                   src={currentRoom.images[0]}
@@ -878,7 +876,7 @@ export const BookingFlowPage: React.FC = () => {
               {/* Pricing breakdown */}
               <div className="space-y-2 text-xs text-stone-600">
                 <div className="flex justify-between">
-                  <span>Suite Rate ({nightsCount} nights):</span>
+                  <span>Room Rate ({nightsCount} nights):</span>
                   <span className="font-semibold text-stone-900 tabular-nums">₱{roomSubtotal.toLocaleString()}</span>
                 </div>
                 {appliedPromo && (
@@ -889,7 +887,7 @@ export const BookingFlowPage: React.FC = () => {
                 )}
                 {addonsSubtotal > 0 && (
                   <div className="flex justify-between">
-                    <span>Enhancements:</span>
+                    <span>Add-Ons:</span>
                     <span className="font-semibold text-stone-900 tabular-nums">₱{addonsSubtotal.toLocaleString()}</span>
                   </div>
                 )}
@@ -909,7 +907,7 @@ export const BookingFlowPage: React.FC = () => {
 
               <div className="p-3 bg-stone-50 rounded-lg text-[11px] text-stone-500 border border-stone-200/60 leading-relaxed">
                 <p className="font-semibold text-stone-800 mb-0.5">Best Rate Guarantee</p>
-                Direct booking ensures complimentary upgrades upon availability and early check-in.
+                Book directly with The K Grand Hotel for our best available rates.
               </div>
             </div>
           </div>

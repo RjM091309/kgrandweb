@@ -61,12 +61,12 @@ export const RoomDetailPage: React.FC = () => {
 
   const handleShare = () => {
     navigator.clipboard?.writeText(window.location.href);
-    showNotification('Suite link copied to clipboard.');
+    showNotification('Room link copied to clipboard.');
   };
 
   const handleSave = () => {
     setIsSaved(!isSaved);
-    showNotification(!isSaved ? 'Suite saved to your wishlist.' : 'Removed from wishlist.');
+    showNotification(!isSaved ? 'Room saved to your wishlist.' : 'Removed from wishlist.');
   };
 
   const handleReserve = () => {
@@ -152,20 +152,20 @@ export const RoomDetailPage: React.FC = () => {
                 />
               </button>
             ))}
-            {/* Additional view from resort */}
+            {/* Additional view of the hotel */}
             <button
               type="button"
-              onClick={() => openLightbox(IMAGES.hero, 'The Aurelia Estate Panorama', 'Panoramic cliffside view')}
+              onClick={() => openLightbox(IMAGES.location, 'The K Grand Hotel', 'Clark Freeport Zone, Pampanga')}
               className="relative aspect-[16/10] rounded-lg overflow-hidden border border-stone-200 bg-stone-900 group"
             >
               <img
-                src={IMAGES.hero}
-                alt="Estate grounds"
+                src={IMAGES.location}
+                alt="The K Grand Hotel building"
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform"
               />
               <div className="absolute inset-0 flex items-center justify-center text-center text-white text-[10px] sm:text-xs font-medium leading-tight">
-                <span>View Grounds</span>
+                <span>View Hotel</span>
               </div>
             </button>
           </div>
@@ -220,7 +220,7 @@ export const RoomDetailPage: React.FC = () => {
             {/* Room Features */}
             <div className="space-y-4 pt-4 border-t border-stone-200">
               <h3 className="text-lg font-serif text-stone-900">
-                Sanctuary Highlights
+                Room Highlights
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {room.features.map((feat, i) => (
@@ -232,10 +232,10 @@ export const RoomDetailPage: React.FC = () => {
               </div>
             </div>
 
-            {/* In-Suite Amenities */}
+            {/* In-Room Amenities */}
             <div className="space-y-4 pt-4 border-t border-stone-200">
               <h3 className="text-lg font-serif text-stone-900">
-                In-Suite Luxuries & Amenities
+                In-Room Amenities
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs text-stone-600">
                 {room.amenities.map((item, idx) => (
@@ -334,15 +334,15 @@ export const RoomDetailPage: React.FC = () => {
               {/* Price Calculation Breakdown */}
               <div className="space-y-2.5 pt-3 border-t border-stone-100 text-xs text-stone-600">
                 <div className="flex justify-between">
-                  <span>₱{room.pricePerNight.toLocaleString()} × {nightsCount} nights {searchState.roomsCount > 1 ? `× ${searchState.roomsCount} suites` : ''}</span>
+                  <span>₱{room.pricePerNight.toLocaleString()} × {nightsCount} nights {searchState.roomsCount > 1 ? `× ${searchState.roomsCount} rooms` : ''}</span>
                   <span className="font-semibold text-stone-900 tabular-nums">₱{basePrice.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>State & Hospitality Tax (10%)</span>
+                  <span>Taxes (10%)</span>
                   <span className="font-semibold text-stone-900 tabular-nums">₱{taxes.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Estate Service & Butler Fee (5%)</span>
+                  <span>Service Charge (5%)</span>
                   <span className="font-semibold text-stone-900 tabular-nums">₱{serviceCharge.toLocaleString()}</span>
                 </div>
                 <div className="pt-2 border-t border-stone-200 flex justify-between text-sm">
@@ -357,7 +357,7 @@ export const RoomDetailPage: React.FC = () => {
                 onClick={handleReserve}
                 className="w-full py-3.5 px-4 bg-amber-300 hover:bg-amber-200 active:bg-amber-400 text-stone-950 font-semibold text-xs tracking-wider uppercase rounded-lg transition-colors shadow-md flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>Reserve This Suite</span>
+                <span>Reserve This Room</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
@@ -374,7 +374,7 @@ export const RoomDetailPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
             <div>
               <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold block">
-                Alternate Residences
+                More Rooms
               </span>
               <h3 className="text-2xl font-serif text-stone-900">
                 Other Accommodations You May Love
@@ -418,7 +418,7 @@ export const RoomDetailPage: React.FC = () => {
                       ₱{relRoom.pricePerNight.toLocaleString()} <span className="font-sans font-normal text-stone-500 text-[10px]">/ night</span>
                     </span>
                     <span className="text-amber-700 font-semibold text-[11px] group-hover:translate-x-0.5 transition-transform inline-flex items-center">
-                      Explore Suite →
+                      View Room →
                     </span>
                   </div>
                 </div>

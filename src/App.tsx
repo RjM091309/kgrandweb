@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import { HotelProvider, useHotel } from './context/HotelContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
@@ -37,8 +38,16 @@ const MainContent: React.FC = () => {
   const { currentPage } = useHotel();
 
   return (
-    <main className="min-h-screen flex flex-col justify-between">
-      <div>
+    <main className="min-h-screen flex flex-col justify-between bg-stone-950">
+      {/* Fade between pages through the dark backdrop of <main>; keyed on the page so each navigation replays it. */}
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={currentPage}
+          className="flex-1 bg-stone-50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, transition: { duration: 0.3, ease: 'easeOut' } }}
+          exit={{ opacity: 0, transition: { duration: 0.15, ease: 'easeIn' } }}
+        >
         {currentPage === 'home' && <HomePage />}
         {currentPage === 'rooms' && <RoomsPage />}
         {currentPage === 'room-detail' && <RoomDetailPage />}
@@ -56,7 +65,8 @@ const MainContent: React.FC = () => {
         {currentPage === 'my-bookings' && <MyBookingsPage />}
         {currentPage === 'privacy' && <LegalPage type="privacy" />}
         {currentPage === 'terms' && <LegalPage type="terms" />}
-      </div>
+        </motion.div>
+      </AnimatePresence>
       <Footer />
     </main>
   );
@@ -65,6 +75,7 @@ const MainContent: React.FC = () => {
 export default function App() {
   return (
     <HotelProvider>
+      <MotionConfig reducedMotion="user">
       <div className="min-h-screen bg-stone-50 text-stone-900 selection:bg-amber-200 selection:text-stone-900 flex flex-col">
         <Navbar />
         <div className="flex-1">
@@ -74,6 +85,7 @@ export default function App() {
         <LightboxModal />
         <ToastNotification />
       </div>
+      </MotionConfig>
     </HotelProvider>
   );
 }

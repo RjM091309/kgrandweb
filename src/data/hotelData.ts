@@ -64,7 +64,7 @@ export interface Review {
 export interface GalleryItem {
   id: string;
   title: string;
-  category: 'All' | 'Suites & Villas' | 'Dining & Bars' | 'Spa & Wellness' | 'Resort Grounds';
+  category: 'All' | 'Rooms' | 'Lobby & Interiors' | 'Hotel Exterior';
   image: string;
   caption: string;
 }
@@ -87,8 +87,8 @@ export const HOTEL_INFO = {
   address: "Lot 1 E. Aguinaldo St., Clark Freeport Zone, Mabalacat City, 2010 Pampanga, Philippines",
   phone: "+63 945 789 1069",
   phoneHref: "tel:+639457891069",
-  reservationsEmail: "concierge@aureliagrandhotel.com", // TODO: replace with the real K Grand email
-  inquiriesEmail: "inquiries@aureliagrandhotel.com", // TODO: replace with the real K Grand email
+  reservationsEmail: "reservations@thekgrandhotel.com", // TODO: confirm this mailbox exists
+  inquiriesEmail: "info@thekgrandhotel.com", // TODO: confirm this mailbox exists
   checkInTime: "15:00",
   checkOutTime: "12:00",
   mapsQuery: "The K Grand Hotel, Lot 1 E. Aguinaldo St., Clark Freeport Zone, Mabalacat City, Pampanga",
@@ -98,7 +98,7 @@ export const HOTEL_INFO = {
 };
 
 export const IMAGES = {
-  hero: "/images/hero_resort_exterior_1791871801628.jpg",
+  hero: "/images/body-bg.jpg",
   entrance: "/images/body-bg.jpg",
   entrance2: "/images/body1-bg.jpg",
   entrance3: "/images/body2-bg.jpg",
@@ -108,14 +108,6 @@ export const IMAGES = {
   galleryRoom: "/images/1.jpg",
   galleryLobby: "/images/2.jpg",
   galleryRoom2: "/images/3.jpg",
-  presidentialSuite: "/images/room_presidential_suite_1791871801733.jpg",
-  oceanVilla: "/images/room_deluxe_ocean_villa_1791871801629.jpg",
-  spaPool: "/images/amenity_infinity_pool_spa_1791871802968.jpg",
-  fineDining: "/images/amenity_fine_dining_restaurant_1791871801760.jpg",
-  gardenSuite: "/images/room_garden_suite_1791871932788.jpg",
-  cliffsideVilla: "/images/room_cliffside_villa_1791871932574.jpg",
-  penthouseSky: "/images/room_penthouse_sky_1791871933555.jpg",
-  beachClub: "/images/amenity_beach_club_1791871934438.jpg",
 };
 
 export const ROOM_CATEGORIES = ['All', 'Standard', 'Deluxe Queen', 'Deluxe King'];
@@ -241,7 +233,7 @@ export const AMENITIES: Amenity[] = [
     name: "Swimming Pool",
     subtitle: "A refreshing dip after a day in Clark",
     description: "Cool off and unwind at the hotel pool, a relaxing spot to recharge between meetings, sightseeing, or before an early flight from Clark International Airport.",
-    image: IMAGES.spaPool, // TODO: replace with a photo of the K Grand pool
+    image: IMAGES.entrance2, // TODO: replace with a photo of the K Grand pool
     iconName: "Waves",
     operatingHours: "For hotel guests",
     highlights: ["Open to in-house guests", "A great way to cool off in Clark", "Relaxing after a day of travel"]
@@ -251,7 +243,7 @@ export const AMENITIES: Amenity[] = [
     name: "Sauna",
     subtitle: "Heat, relax, and reset",
     description: "Ease travel fatigue and tired muscles in our sauna, a quiet place to relax and recover during your stay.",
-    image: IMAGES.spaPool, // TODO: replace with a photo of the K Grand sauna
+    image: IMAGES.storyLounge, // TODO: replace with a photo of the K Grand sauna
     iconName: "Flame",
     operatingHours: "For hotel guests",
     highlights: ["Helps you relax after travel", "Quiet, private setting", "Pairs perfectly with a pool dip"]
@@ -299,219 +291,165 @@ export const AMENITIES: Amenity[] = [
 ];
 
 export const SPECIAL_OFFERS: SpecialOffer[] = [
+  // TODO: confirm every offer (discount, promo code, validity, inclusions) with K Grand management before promoting it.
   {
-    id: "offer-romance",
-    title: "The Coastal Romance & Sanctuary Experience",
-    badge: "Most Popular",
-    subtitle: "A celebratory escape designed for intimate moments and restorative luxury",
-    description: "Indulge in pure Mediterranean romance. Enjoy luxury suite accommodations, chilled vintage champagne upon arrival, a 90-minute couples thalasso treatment, and an intimate candlelit 4-course dinner overlooking the bay.",
-    discountPercentage: 25,
-    promoCode: "ROMANCE25",
-    validUntil: "December 20, 2026",
+    id: "offer-long-stay",
+    title: "Long-Stay Savings in Clark",
+    badge: "Stay Longer",
+    subtitle: "Make yourself at home with a better rate on extended stays",
+    description: "In Clark for work, a project, or a family visit? Book 7 nights or more in any apartment-style room and enjoy a lower nightly rate, with free parking and EV charging throughout your stay.",
+    discountPercentage: 15,
+    promoCode: "LONGSTAY15",
+    validUntil: "December 31, 2026",
+    minNights: 7,
+    benefits: [
+      "15% off the nightly room rate",
+      "Free on-site parking and EV charging",
+      "Access to the sauna and pool",
+      "Early check-in or late check-out, subject to availability"
+    ],
+    image: IMAGES.galleryRoom2,
+  },
+  {
+    id: "offer-direct",
+    title: "Book Direct & Save",
+    badge: "Best Rate",
+    subtitle: "Our best available rate when you book with us directly",
+    description: "Skip the booking sites and reserve straight with The K Grand Hotel for a better rate and a warm welcome from our front desk team.",
+    discountPercentage: 10,
+    promoCode: "DIRECT10",
+    validUntil: "December 31, 2026",
+    minNights: 1,
+    benefits: [
+      "10% off the nightly room rate",
+      "Free on-site parking and EV charging",
+      "Access to the sauna and pool"
+    ],
+    image: IMAGES.galleryRoom,
+  },
+  {
+    id: "offer-weekend",
+    title: "Clark Weekend Getaway",
+    badge: "Weekend Escape",
+    subtitle: "Two nights to slow down, close to everything in Clark",
+    description: "Drive in, park for free, and spend the weekend unwinding at the sauna and pool, with Clark's malls, parks, and restaurants just minutes away.",
+    discountPercentage: 10,
+    promoCode: "WEEKEND10",
+    validUntil: "December 31, 2026",
     minNights: 2,
     benefits: [
-      "Bottle of Laurent-Perrier Cuvée Rosé with artisanal macarons on arrival",
-      "90-minute bespoke couples spa massage at The Thalasso Spa",
-      "4-course candlelit dinner with sommelier pairings at L'Aura",
-      "Complimentary gourmet in-suite Champagne breakfast each morning",
-      "Guaranteed late check-out until 16:00"
+      "10% off a 2-night weekend stay",
+      "Late check-out, subject to availability",
+      "Free on-site parking and EV charging",
+      "Access to the sauna and pool"
     ],
-    image: IMAGES.oceanVilla,
-    applicableRoomCategory: "Suites"
-  },
-  {
-    id: "offer-extended-villa",
-    title: "Extended Mediterranean Villa Escape",
-    badge: "Stay 5, Pay 4",
-    subtitle: "Complimentary 5th night with luxury roundtrip airport transfers",
-    description: "Savor the leisurely rhythm of the Côte d'Azur. Reserve four consecutive nights in any of our standalone plunge pool villas or penthouses and enjoy the fifth night complimentary, plus chauffeured private transfers.",
-    discountPercentage: 20,
-    promoCode: "EXTENDVILLA",
-    validUntil: "November 15, 2026",
-    minNights: 5,
-    benefits: [
-      "5th night complimentary on consecutive stays",
-      "Private Mercedes-Benz S-Class airport transfer from/to Nice (NCE)",
-      "Daily full estate breakfast buffet & à la carte selections",
-      "₱150 resort credit applicable towards spa or fine dining",
-      "Reserved prime beachfront cabana throughout entire stay"
-    ],
-    image: IMAGES.cliffsideVilla,
-    applicableRoomCategory: "Villas"
-  },
-  {
-    id: "offer-early-bird",
-    title: "Early Summer Haven Advance Booking",
-    badge: "Advance Purchase",
-    subtitle: "Plan ahead and secure up to 20% off premier suites and residences",
-    description: "Secure your slice of paradise in advance. Reserve your summer Mediterranean retreat 45 days prior to arrival and receive exclusive preferred rates along with complimentary signature dining experiences.",
-    discountPercentage: 20,
-    promoCode: "EARLYBIRD20",
-    validUntil: "October 30, 2026",
-    minNights: 3,
-    benefits: [
-      "20% preferential reduction on published suite rates",
-      "Welcome bottle of chilled Provençal Rosé in room",
-      "Complimentary daily gourmet breakfast on the seaside terrace",
-      "Flexible complimentary date adjustment up to 14 days before arrival"
-    ],
-    image: IMAGES.presidentialSuite
+    image: IMAGES.storyRoom,
   }
 ];
 
-export const REVIEWS: Review[] = [
-  {
-    id: "rev-1",
-    author: "Elena Rostova",
-    location: "Zurich, Switzerland",
-    avatarText: "ER",
-    date: "September 28, 2026",
-    stayDuration: "4 nights",
-    roomBooked: "Deluxe Azure Plunge Pool Villa",
-    rating: 5.0,
-    title: "An ethereal retreat that surpassed every expectation",
-    content: "From the moment we arrived via private launch to our villa's plunge pool looking out over the turquoise bay, Aurelia proved why it stands in a class of its own. The service is invisible yet anticipatory. Chef Moreau's tasting menu was exceptional, and the bed linen was pure heaven.",
-    helpfulCount: 42
-  },
-  {
-    id: "rev-2",
-    author: "Jonathan Sterling",
-    location: "London, United Kingdom",
-    avatarText: "JS",
-    date: "August 14, 2026",
-    stayDuration: "7 nights",
-    roomBooked: "The Grand Presidential Ocean Suite",
-    rating: 5.0,
-    title: "Flawless hospitality on the French Riviera",
-    content: "Having visited top resorts across the Mediterranean over the past twenty years, Aurelia has established a new gold standard. Our butler, Laurent, ensured every detail from restaurant reservations to private Riva excursions was executed without friction. Truly remarkable.",
-    helpfulCount: 38
-  },
-  {
-    id: "rev-3",
-    author: "Camille & Marc Dumont",
-    location: "Paris, France",
-    avatarText: "CD",
-    date: "July 22, 2026",
-    stayDuration: "3 nights",
-    roomBooked: "Cliffside Horizon Sanctuary Villa",
-    rating: 4.9,
-    title: "Unmatched sunset vistas and sublime thalasso wellness",
-    content: "The cliffside villa has arguably the most cinematic sunset perspective anywhere on the Côte d'Azur. The infinity pool thermal circuits melted all fatigue away within hours. We cannot wait to return for our anniversary next summer.",
-    helpfulCount: 29
-  },
-  {
-    id: "rev-4",
-    author: "Dr. Kenji Takahashi",
-    location: "Tokyo, Japan",
-    avatarText: "KT",
-    date: "June 05, 2026",
-    stayDuration: "5 nights",
-    roomBooked: "The Aurelia Sky Penthouse Residence",
-    rating: 5.0,
-    title: "Architectural perfection meets genuine warmth",
-    content: "The design restraint and acoustic tranquility of the penthouse are world class. You feel entirely alone with the ocean, yet the concierge responds in seconds to any request. Outstanding breakfast bakery items as well.",
-    helpfulCount: 19
-  }
-];
+// Add real guest reviews here (with the guest's permission). The home page hides the
+// reviews section while this list is empty.
+export const REVIEWS: Review[] = [];
 
 export const GALLERY_ITEMS: GalleryItem[] = [
   {
     id: "gal-1",
     title: "The K Grand Hotel at Dusk",
-    category: "Resort Grounds",
+    category: "Hotel Exterior",
     image: IMAGES.location,
     caption: "The K Grand Hotel on E. Aguinaldo Street, Clark Freeport Zone, as the evening lights come on."
   },
   {
     id: "gal-2",
     title: "Guest Room",
-    category: "Suites & Villas",
+    category: "Rooms",
     image: IMAGES.galleryRoom,
     caption: "Warm ambient lighting, a plush bed, a work desk, and a cozy reading corner in every room."
   },
   {
     id: "gal-3",
     title: "Lobby & Reception",
-    category: "Resort Grounds",
+    category: "Lobby & Interiors",
     image: IMAGES.galleryLobby,
     caption: "The K Grand reception, where our team welcomes you to Clark."
   },
   {
     id: "gal-4",
     title: "Guest Room with Work Desk",
-    category: "Suites & Villas",
+    category: "Rooms",
     image: IMAGES.galleryRoom2,
     caption: "Soft cove lighting, a plush bed, and a window-side desk for working or unwinding."
   },
   {
     id: "gal-5",
     title: "Guest Room",
-    category: "Suites & Villas",
+    category: "Rooms",
     image: IMAGES.galleryRoom,
     caption: "Warm ambient lighting, a plush bed, a work desk, and a cozy reading corner in every room."
   },
   {
     id: "gal-6",
     title: "Lobby & Reception",
-    category: "Resort Grounds",
+    category: "Lobby & Interiors",
     image: IMAGES.galleryLobby,
     caption: "The K Grand reception, where our team welcomes you to Clark."
   },
   {
     id: "gal-7",
     title: "Guest Room with Work Desk",
-    category: "Suites & Villas",
+    category: "Rooms",
     image: IMAGES.galleryRoom2,
     caption: "Soft cove lighting, a plush bed, and a window-side desk for working or unwinding."
   },
   {
     id: "gal-8",
     title: "Guest Room",
-    category: "Suites & Villas",
+    category: "Rooms",
     image: IMAGES.galleryRoom,
     caption: "Warm ambient lighting, a plush bed, a work desk, and a cozy reading corner in every room."
   },
   {
     id: "gal-9",
-    title: "Cala d'Or Private Beach Club",
-    category: "Resort Grounds",
-    image: IMAGES.beachClub,
-    caption: "Linen-draped teak cabanas along our sheltered Mediterranean cove."
+    title: "Hotel Entrance at Night",
+    category: "Hotel Exterior",
+    image: IMAGES.entrance,
+    caption: "The K Grand Hotel entrance, lit up and ready to welcome guests arriving in Clark."
   }
 ];
 
 export const BOOKING_ADDONS: BookingAddOn[] = [
+  // TODO: confirm which add-ons K Grand offers and their actual prices (PHP).
   {
-    id: "addon-breakfast",
-    name: "Gourmet Champagne & Truffle Breakfast",
-    description: "Daily à la carte in-suite or seaside terrace breakfast with fresh pastries, artisanal pressed juices, and vintage champagne.",
-    price: 45,
-    perPerson: true,
-    icon: "Coffee"
+    id: "addon-early-checkin",
+    name: "Early Check-In",
+    description: "Get into your room from 10:00 instead of the standard 15:00 check-in. Subject to availability; our front desk will confirm before arrival.",
+    price: 800,
+    perStay: true,
+    icon: "Clock"
   },
   {
-    id: "addon-transfer",
-    name: "Private Limousine Airport Transfer",
-    description: "Chauffeured Mercedes-Maybach transfer between Nice Côte d'Azur Airport (NCE) and Aurelia Grand (one-way or roundtrip).",
-    price: 180,
+    id: "addon-late-checkout",
+    name: "Late Check-Out",
+    description: "Keep your room until 16:00 instead of the standard 12:00 check-out. Subject to availability.",
+    price: 800,
+    perStay: true,
+    icon: "Clock"
+  },
+  {
+    id: "addon-airport-transfer",
+    name: "Clark Airport Transfer",
+    description: "One-way car transfer between Clark International Airport (CRK) and the hotel, about 4 km away.",
+    price: 600,
     perStay: true,
     icon: "Car"
   },
   {
-    id: "addon-spa",
-    name: "90-Min Thalasso Rejuvenation Treatment",
-    description: "Signature marine mineral scrub, hydrotherapy bath, and restorative aromatherapy deep-tissue massage.",
-    price: 240,
-    perPerson: true,
-    icon: "Sparkles"
-  },
-  {
-    id: "addon-champagne",
-    name: "Dom Pérignon & Beluga Caviar Welcome",
-    description: "Chilled bottle of Dom Pérignon Vintage 2013 paired with 30g Ossetra Caviar and traditional accompaniments in room on arrival.",
-    price: 380,
+    id: "addon-extra-bed",
+    name: "Extra Bed",
+    description: "A rollaway bed set up in your room for an additional guest.",
+    price: 1000,
     perStay: true,
-    icon: "Wine"
+    icon: "BedDouble"
   }
 ];
 
@@ -549,26 +487,26 @@ export const NEARBY_ATTRACTIONS = [
 export const FAQS = [
   {
     question: "What are your check-in and check-out times?",
-    answer: "Standard check-in begins at 15:00, and check-out is at 12:00 noon. Early check-in and late check-out can be requested in advance and are granted subject to availability. Guests arriving early are welcomed to enjoy our pool, spa, and beach club immediately upon arrival while their luggage is securely attended to."
+    answer: "Check-in starts at 15:00 and check-out is at 12:00 noon. Early check-in and late check-out can be requested in advance and are subject to availability."
   },
   {
-    question: "What is the cancellation and deposit policy?",
-    answer: "Reservations booked under our standard Best Flexible Rate enjoy complimentary cancellation up to 48 hours prior to arrival (15:00 local time). Cancellations made within 48 hours are subject to a 1-night room charge. Special advance-purchase promotions may feature specific non-refundable terms highlighted clearly during room selection."
+    question: "What is the cancellation policy?",
+    answer: "Standard reservations can be cancelled free of charge up to 48 hours before arrival. Cancellations made within 48 hours of arrival are charged one night's room rate. Promotional rates may have different terms, which are shown before you confirm."
   },
   {
-    question: "Are airport transfers and helipad access available?",
-    answer: "Yes. We operate a fleet of private Mercedes-Benz S-Class and V-Class vehicles connecting Nice Côte d'Azur International Airport (NCE), located 18 km away (approx. 30 minutes). In addition, Aurelia features a private certified helipad allowing 8-minute helicopter transfers directly to Nice Airport or Monaco."
+    question: "Where is the hotel, and how far is it from Clark International Airport?",
+    answer: "We are at Lot 1 E. Aguinaldo St., Clark Freeport Zone, Mabalacat City, Pampanga, about 4 km (2.5 miles) from Clark International Airport (CRK). Contact us if you would like help arranging a transfer."
   },
   {
-    question: "Are children welcome at Aurelia Grand?",
-    answer: "Yes, children of all ages are warmly welcomed. We offer interconnected family suites, bespoke children's welcome amenities, baby cots, childproofing upon request, and certified multilingual nanny services arranged through our concierge."
+    question: "Is parking available? Can I charge my electric vehicle?",
+    answer: "Yes. On-site parking is free for hotel guests, and we have EV charging on site so you can charge while you stay."
   },
   {
-    question: "Is high-speed Wi-Fi provided throughout the estate?",
-    answer: "Yes, dedicated fiber-optic Wi-Fi (up to 1 Gbps) is complimentary and seamlessly accessible across all guest rooms, villas, private beach cabanas, gardens, and dining venues."
+    question: "What facilities can guests use?",
+    answer: "All guests can use the sauna and pool. Every room is apartment-style, with air-conditioning, a private bathroom, a work desk, and its own terrace or balcony."
   },
   {
-    question: "What dining options are available on property?",
-    answer: "Guests can experience L'Aura (our 2-Michelin starred fine dining restaurant), Le Rivage (casual seaside seafood and grill), The Cliff Bar (sunset craft cocktails and rare spirits), and 24-hour in-suite dining curated by our culinary brigade."
+    question: "Do you offer rates for longer stays?",
+    answer: "Yes. Our apartment-style rooms are well suited to extended stays. Contact our front desk or choose \"Long-Stay Inquiry\" on the contact form and we will send you a quote."
   }
 ];

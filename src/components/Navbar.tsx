@@ -16,7 +16,7 @@ export const Navbar: React.FC = () => {
   }, []);
 
   const navLinks: { label: string; page: Page }[] = [
-    { label: 'Rooms & Suites', page: 'rooms' },
+    { label: 'Rooms', page: 'rooms' },
     { label: 'Amenities', page: 'amenities' },
     { label: 'Special Offers', page: 'offers' },
     { label: 'Gallery', page: 'gallery' },
