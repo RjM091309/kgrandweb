@@ -332,8 +332,6 @@ export const OffersPage: React.FC = () => {
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-amber-800 font-medium">
                   <span className="whitespace-nowrap">Save {offer.discountPercentage}%</span>
                   <span aria-hidden="true">·</span>
-                  <span className="whitespace-nowrap">Promo Code: <strong className="font-mono">{offer.promoCode}</strong></span>
-                  <span aria-hidden="true">·</span>
                   <span className="whitespace-nowrap">Min. {offer.minNights} Nights</span>
                 </div>
 
@@ -362,12 +360,12 @@ export const OffersPage: React.FC = () => {
 
               <div className="pt-4 border-t border-stone-100 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
                 <span className="text-[11px] text-stone-400 text-center sm:text-left">
-                  Valid until {offer.validUntil}
+                  Valid until {offer.validUntil} · Mention "{offer.title}" in your special requests; our front desk applies it when confirming.
                 </span>
 
                 <button
-                  onClick={() => navigateTo('rooms')}
-                  className="px-6 py-2.5 bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold uppercase tracking-wider rounded-lg transition-colors shadow-sm"
+                  onClick={() => navigateTo('booking')}
+                  className="px-6 py-2.5 bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold uppercase tracking-wider rounded-lg transition-colors shadow-sm shrink-0"
                 >
                   Book This Package
                 </button>

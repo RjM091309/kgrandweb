@@ -24,8 +24,23 @@ import { Select } from '../components/Select';
 const MIN_RATE = 2000;
 const MAX_RATE = 10000;
 
+/** How many rooms of a type are still free for the searched dates (from the admin system), shown beside the room name. */
+const AvailabilityBadge: React.FC<{ left?: number }> = ({ left }) => {
+  if (left === undefined) return null;
+  const soldOut = left === 0;
+  return (
+    <span
+      className={`shrink-0 px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider whitespace-nowrap ${
+        soldOut ? 'bg-stone-200 text-stone-600' : left <= 3 ? 'bg-amber-100 text-amber-900' : 'bg-emerald-50 text-emerald-800'
+      }`}
+    >
+      {soldOut ? 'Sold out' : left <= 3 ? `Only ${left} left` : 'Available'}
+    </span>
+  );
+};
+
 export const RoomsPage: React.FC = () => {
-  const { searchState, updateSearch, selectRoom, navigateTo } = useHotel();
+  const { searchState, updateSearch, selectRoom, navigateTo, availability } = useHotel();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<'popularity' | 'price-asc' | 'price-desc' | 'size'>('popularity');
   const [maxPrice, setMaxPrice] = useState<number>(MAX_RATE);
@@ -55,7 +70,7 @@ export const RoomsPage: React.FC = () => {
       if (selectedBedType === 'king' && !room.bedConfiguration.toLowerCase().includes('king')) {
         return false;
       }
-      if (selectedBedType === 'queen' && !room.bedConfiguration.toLowerCase().includes('queen')) {
+      if (selectedBedType === 'twin' && room.category !== 'Deluxe Twin') {
         return false;
       }
       return true;
@@ -237,8 +252,8 @@ export const RoomsPage: React.FC = () => {
               {/* Minimum Guest Capacity */}
               <div className="space-y-2 pt-2 border-t border-stone-100">
                 <span className="block text-xs font-medium text-stone-700">Guest Capacity</span>
-                <div className="grid grid-cols-4 gap-1.5">
-                  {[1, 2, 4, 6].map((num) => (
+                <div className="grid grid-cols-2 gap-1.5">
+                  {[1, 2].map((num) => (
                     <button
                       key={num}
                       type="button"
@@ -283,11 +298,11 @@ export const RoomsPage: React.FC = () => {
                     <input
                       type="radio"
                       name="bedType"
-                      checked={selectedBedType === 'queen'}
-                      onChange={() => setSelectedBedType('queen')}
+                      checked={selectedBedType === 'twin'}
+                      onChange={() => setSelectedBedType('twin')}
                       className="accent-amber-600"
                     />
-                    <span>Queen Bed</span>
+                    <span>Twin Beds</span>
                   </label>
                 </div>
               </div>
@@ -361,17 +376,20 @@ export const RoomsPage: React.FC = () => {
                     {/* Content */}
                     <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
                       <div className="space-y-2">
-                        <h3 className="font-serif text-lg text-stone-900 group-hover:text-amber-900 transition-colors">
-                          {room.name}
-                        </h3>
+                        <div className="flex items-start justify-between gap-2">
+                          <h3 className="font-serif text-lg text-stone-900 group-hover:text-amber-900 transition-colors">
+                            {room.name}
+                          </h3>
+                          <AvailabilityBadge left={availability?.[room.apiTypeId]} />
+                        </div>
 
                         {/* Metadata text without pills */}
                         <div className="flex items-center gap-2 text-xs text-stone-500 flex-wrap">
                           <span>{room.sizeSqM} m²</span>
                           <span aria-hidden="true">·</span>
-                          <span>{room.bedConfiguration.split(' ')[1]} Bed</span>
+                          <span>{room.bedConfiguration}</span>
                           <span aria-hidden="true">·</span>
-                          <span>Up to {room.maxAdults} Adults</span>
+                          <span>Up to {room.maxAdults} Guests</span>
                         </div>
 
                         <p className="text-xs text-stone-600 line-clamp-2 leading-relaxed">
@@ -456,9 +474,12 @@ export const RoomsPage: React.FC = () => {
                           <span className="text-xs text-stone-500 font-medium">{room.view}</span>
                         </div>
 
-                        <h3 className="font-serif text-xl text-stone-900 group-hover:text-amber-900 transition-colors">
-                          {room.name}
-                        </h3>
+                        <div className="flex items-start justify-between gap-2">
+                          <h3 className="font-serif text-xl text-stone-900 group-hover:text-amber-900 transition-colors">
+                            {room.name}
+                          </h3>
+                          <AvailabilityBadge left={availability?.[room.apiTypeId]} />
+                        </div>
 
                         {/* Unboxed Metadata */}
                         <div className="flex items-center gap-2 text-xs text-stone-500">
@@ -466,7 +487,7 @@ export const RoomsPage: React.FC = () => {
                           <span aria-hidden="true">·</span>
                           <span>{room.bedConfiguration}</span>
                           <span aria-hidden="true">·</span>
-                          <span>Max {room.maxAdults} Adults, {room.maxChildren} Children</span>
+                          <span>Up to {room.maxAdults} Guests per Room</span>
                         </div>
 
                         <p className="text-xs text-stone-600 leading-relaxed pt-1">

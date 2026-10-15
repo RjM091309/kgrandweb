@@ -1,8 +1,12 @@
+import type { HotelInfoResponse } from '../lib/bookingApi';
+
 export interface Room {
   id: string;
   name: string;
   tagline: string;
-  category: 'Standard' | 'Deluxe Queen' | 'Deluxe King';
+  category: 'Standard' | 'Deluxe King' | 'Deluxe Twin';
+  /** The room type's id in the K Grand admin system (its rate and availability come from there). */
+  apiTypeId: string;
   pricePerNight: number;
   originalPrice?: number;
   sizeSqM: number;
@@ -89,8 +93,8 @@ export const HOTEL_INFO = {
   phoneHref: "tel:+639457891069",
   reservationsEmail: "reservations@thekgrandhotel.com", // TODO: confirm this mailbox exists
   inquiriesEmail: "info@thekgrandhotel.com", // TODO: confirm this mailbox exists
-  checkInTime: "15:00",
-  checkOutTime: "12:00",
+  checkInTime: "14:00", // replaced at load by the admin system's setting
+  checkOutTime: "12:00", // replaced at load by the admin system's setting
   mapsQuery: "The K Grand Hotel, Lot 1 E. Aguinaldo St., Clark Freeport Zone, Mabalacat City, Pampanga",
   cancellationPolicyDefault: "Complimentary cancellation up to 48 hours prior to arrival. Deposit is fully refundable within this window.",
   rating: 4.96,
@@ -110,19 +114,22 @@ export const IMAGES = {
   galleryRoom2: "/images/3.jpg",
 };
 
-export const ROOM_CATEGORIES = ['All', 'Standard', 'Deluxe Queen', 'Deluxe King'];
+export const ROOM_CATEGORIES = ['All', 'Standard', 'Deluxe King', 'Deluxe Twin'];
 
+// The three room types of the K Grand admin system. Name, nightly rate (its walk-in rate) and guest limit are replaced at load
+// with the admin system's values (see applyHotelInfo); the numbers below are only shown until then, or if it can't be reached.
 export const ROOMS: Room[] = [
   {
     id: "standard",
+    apiTypeId: "23",
     name: "Standard Room",
     tagline: "Comfortable, well-appointed room for solo travelers and couples",
     category: "Standard",
-    pricePerNight: 3500, // TODO: confirm actual rate (PHP)
+    pricePerNight: 4000,
     sizeSqM: 24, // TODO: confirm actual size
     sizeSqFt: 258,
-    maxAdults: 2, // TODO: confirm
-    maxChildren: 1, // TODO: confirm
+    maxAdults: 2,
+    maxChildren: 0,
     bedConfiguration: "1 Double Bed", // TODO: confirm bed type
     view: "Private Terrace or Balcony",
     images: [IMAGES.galleryRoom, IMAGES.galleryRoom2, IMAGES.galleryLobby],
@@ -150,25 +157,26 @@ export const ROOMS: Room[] = [
     reviewCount: 5, // TODO: replace with real review count
   },
   {
-    id: "deluxe-queen",
-    name: "Deluxe Queen Room",
-    tagline: "Extra space and a queen-size bed for a more relaxed stay",
-    category: "Deluxe Queen",
-    pricePerNight: 4500, // TODO: confirm actual rate (PHP)
+    id: "deluxe-king",
+    apiTypeId: "24",
+    name: "Deluxe King Room",
+    tagline: "Extra space and a king-size bed for a more relaxed stay",
+    category: "Deluxe King",
+    pricePerNight: 4600,
     sizeSqM: 30, // TODO: confirm actual size
     sizeSqFt: 323,
-    maxAdults: 2, // TODO: confirm
-    maxChildren: 1, // TODO: confirm
-    bedConfiguration: "1 Queen Bed",
+    maxAdults: 2,
+    maxChildren: 0,
+    bedConfiguration: "1 King Bed",
     view: "Private Terrace or Balcony",
     images: [IMAGES.galleryLobby, IMAGES.galleryRoom, IMAGES.galleryRoom2],
-    description: "A roomier deluxe room with a queen-size bed, a work desk, and a private terrace or balcony. Great for couples and business travelers.",
+    description: "A roomier deluxe room with a king-size bed, a work desk, and a private terrace or balcony. Great for couples and business travelers.",
     longDescription: [
-      "The Deluxe Queen Room gives you more space to settle in, with a queen-size bed, soft cove lighting, and a dedicated work desk.",
+      "The Deluxe King Room gives you more space to settle in, with a king-size bed, soft cove lighting, and a dedicated work desk.",
       "Every Deluxe room includes air-conditioning, a private bathroom, and its own terrace or balcony, plus access to the sauna and pool."
     ],
     features: [
-      "Queen-size bed",
+      "King-size bed",
       "Private terrace or balcony",
       "Air-conditioning",
       "Private bathroom",
@@ -188,25 +196,26 @@ export const ROOMS: Room[] = [
     popular: true
   },
   {
-    id: "deluxe-king",
-    name: "Deluxe King Room",
-    tagline: "Our most spacious room, with a king-size bed",
-    category: "Deluxe King",
-    pricePerNight: 5000, // TODO: confirm actual rate (PHP)
+    id: "deluxe-twin",
+    apiTypeId: "25",
+    name: "Deluxe Twin Room",
+    tagline: "Two beds and extra space, ideal for friends, colleagues, and families",
+    category: "Deluxe Twin",
+    pricePerNight: 5500,
     sizeSqM: 32, // TODO: confirm actual size
     sizeSqFt: 344,
-    maxAdults: 2, // TODO: confirm
-    maxChildren: 2, // TODO: confirm
-    bedConfiguration: "1 King Bed",
+    maxAdults: 2,
+    maxChildren: 0,
+    bedConfiguration: "2 Single Beds", // TODO: confirm bed type
     view: "Private Terrace or Balcony",
     images: [IMAGES.galleryRoom2, IMAGES.galleryRoom, IMAGES.galleryLobby],
-    description: "Our most spacious room type, with a king-size bed, a sitting area, and a private terrace or balcony. Perfect for longer stays and small families.",
+    description: "Our most spacious room type, with two beds, a sitting area, and a private terrace or balcony. Perfect for travel companions and longer stays.",
     longDescription: [
-      "The Deluxe King Room is designed for guests who want extra room to relax, with a king-size bed, a sitting corner, and plenty of storage.",
+      "The Deluxe Twin Room is designed for guests sharing a room who still want their own bed, with plenty of space and storage.",
       "Enjoy air-conditioning, a private bathroom, and your own terrace or balcony, plus access to the sauna, pool, free parking, and EV charging."
     ],
     features: [
-      "King-size bed",
+      "Two separate beds",
       "Private terrace or balcony",
       "Sitting area",
       "Air-conditioning",
@@ -226,6 +235,22 @@ export const ROOMS: Room[] = [
     reviewCount: 5, // TODO: replace with real review count
   }
 ];
+
+/**
+ * Copies the admin system's live values into the room list and hotel info: each room type's name, walk-in rate and guest limit,
+ * and the check-in / check-out times. The pages read ROOMS and HOTEL_INFO directly, so the context re-renders after calling this.
+ */
+export function applyHotelInfo(info: HotelInfoResponse) {
+  HOTEL_INFO.checkInTime = info.checkInTime || HOTEL_INFO.checkInTime;
+  HOTEL_INFO.checkOutTime = info.checkOutTime || HOTEL_INFO.checkOutTime;
+  for (const room of ROOMS) {
+    const type = info.roomTypes.find((t) => t.id === room.apiTypeId);
+    if (!type) continue;
+    room.name = type.name;
+    if (type.rate > 0) room.pricePerNight = type.rate;
+    room.maxAdults = type.maxGuests;
+  }
+}
 
 export const AMENITIES: Amenity[] = [
   {

@@ -52,10 +52,8 @@ export const RoomDetailPage: React.FC = () => {
   const diffTime = Math.max(1, checkOutDate.getTime() - checkInDate.getTime());
   const nightsCount = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
 
-  const basePrice = room.pricePerNight * nightsCount * searchState.roomsCount;
-  const taxes = Math.round(basePrice * 0.10);
-  const serviceCharge = Math.round(basePrice * 0.05);
-  const totalAmount = basePrice + taxes + serviceCharge;
+  // Nights × nightly rate per room, as the admin system bills it (no added taxes or fees).
+  const totalAmount = room.pricePerNight * nightsCount * searchState.roomsCount;
 
   const relatedRooms = ROOMS.filter((r) => r.id !== room.id).slice(0, 3);
 
@@ -199,7 +197,7 @@ export const RoomDetailPage: React.FC = () => {
                 <span aria-hidden="true">·</span>
                 <span>{room.bedConfiguration}</span>
                 <span aria-hidden="true">·</span>
-                <span>Max {room.maxAdults} Adults + {room.maxChildren} Children</span>
+                <span>Up to {room.maxAdults} Guests per Room</span>
                 <span aria-hidden="true">·</span>
                 <span>{room.view}</span>
               </div>
@@ -335,15 +333,7 @@ export const RoomDetailPage: React.FC = () => {
               <div className="space-y-2.5 pt-3 border-t border-stone-100 text-xs text-stone-600">
                 <div className="flex justify-between">
                   <span>₱{room.pricePerNight.toLocaleString()} × {nightsCount} nights {searchState.roomsCount > 1 ? `× ${searchState.roomsCount} rooms` : ''}</span>
-                  <span className="font-semibold text-stone-900 tabular-nums">₱{basePrice.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Taxes (10%)</span>
-                  <span className="font-semibold text-stone-900 tabular-nums">₱{taxes.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Service Charge (5%)</span>
-                  <span className="font-semibold text-stone-900 tabular-nums">₱{serviceCharge.toLocaleString()}</span>
+                  <span className="font-semibold text-stone-900 tabular-nums">₱{totalAmount.toLocaleString()}</span>
                 </div>
                 <div className="pt-2 border-t border-stone-200 flex justify-between text-sm">
                   <span className="font-semibold text-stone-900">Total Price</span>
@@ -362,7 +352,7 @@ export const RoomDetailPage: React.FC = () => {
               </button>
 
               <div className="space-y-1.5 text-center text-[11px] text-stone-400">
-                <p>No immediate payment required for flexible reservations.</p>
+                <p>No payment needed to book. Pay at the hotel.</p>
                 <p className="text-emerald-700 font-medium">Free cancellation until 48 hours before arrival</p>
               </div>
             </div>

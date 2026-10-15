@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useHotel, Page } from '../context/HotelContext';
-import { User } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
-  const { currentPage, navigateTo, user, logoutUser } = useHotel();
+  const { currentPage, navigateTo } = useHotel();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -72,70 +70,6 @@ export const Navbar: React.FC = () => {
 
           {/* Zone 3: 1 primary action + guest account shortcut */}
           <div className="flex items-center gap-1.5 min-[360px]:gap-3 sm:gap-4 shrink-0">
-            {/* Account trigger */}
-            <div className="relative">
-              {user.isLoggedIn ? (
-                <button
-                  onClick={() => setAccountMenuOpen(!accountMenuOpen)}
-                  className="flex items-center justify-center gap-2 h-10 w-10 rounded-full sm:h-auto sm:w-auto sm:rounded sm:px-3 sm:py-1.5 text-xs text-stone-200 hover:text-white bg-stone-800/80 hover:bg-stone-800 border border-stone-700/80 transition-colors whitespace-nowrap shrink-0"
-                >
-                  <User className="w-5 h-5 sm:w-3.5 sm:h-3.5 text-amber-300" />
-                  <span className="hidden sm:inline font-sans">{user.firstName}</span>
-                  <span className="text-[10px] text-amber-300/90 hidden md:inline">({user.membershipTier.split(' ')[1]})</span>
-                </button>
-              ) : (
-                <button
-                  onClick={() => navigateTo('signin')}
-                  aria-label="Sign in"
-                  className="flex items-center justify-center gap-1.5 h-10 w-10 rounded-full border border-stone-700/80 bg-stone-900/60 sm:h-auto sm:w-auto sm:rounded-none sm:border-0 sm:bg-transparent sm:px-3 sm:py-1.5 text-xs text-stone-300 hover:text-white transition-colors whitespace-nowrap shrink-0"
-                >
-                  <User className="w-5 h-5 sm:w-3.5 sm:h-3.5 text-amber-300" />
-                  <span className="hidden sm:inline">Sign In</span>
-                </button>
-              )}
-
-              {/* Account Dropdown */}
-              {accountMenuOpen && user.isLoggedIn && (
-                <div
-                  className="absolute right-0 mt-2 w-56 bg-stone-900 border border-stone-800 shadow-xl rounded-md py-2 text-xs text-stone-200 z-50 animate-in fade-in slide-in-from-top-1"
-                  onMouseLeave={() => setAccountMenuOpen(false)}
-                >
-                  <div className="px-4 py-2 border-b border-stone-800">
-                    <p className="font-semibold text-stone-100">{user.title} {user.firstName} {user.lastName}</p>
-                    <p className="text-[11px] text-amber-300">{user.membershipTier}</p>
-                  </div>
-                  <button
-                    onClick={() => {
-                      setAccountMenuOpen(false);
-                      navigateTo('profile');
-                    }}
-                    className="w-full text-left px-4 py-2 hover:bg-stone-800 transition-colors block"
-                  >
-                    Guest Profile & Preferences
-                  </button>
-                  <button
-                    onClick={() => {
-                      setAccountMenuOpen(false);
-                      navigateTo('my-bookings');
-                    }}
-                    className="w-full text-left px-4 py-2 hover:bg-stone-800 transition-colors block"
-                  >
-                    My Reservations
-                  </button>
-                  <div className="border-t border-stone-800 my-1"></div>
-                  <button
-                    onClick={() => {
-                      setAccountMenuOpen(false);
-                      logoutUser();
-                    }}
-                    className="w-full text-left px-4 py-2 text-stone-400 hover:text-red-300 hover:bg-stone-800 transition-colors block"
-                  >
-                    Sign Out
-                  </button>
-                </div>
-              )}
-            </div>
-
             {/* Primary Action Button */}
             <button
               onClick={() => navigateTo('rooms')}

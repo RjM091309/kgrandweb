@@ -213,7 +213,7 @@ export const HomePage: React.FC = () => {
                   <div className="flex items-center gap-2 text-xs text-stone-500 flex-wrap">
                     <span>{room.sizeSqM} m² ({room.sizeSqFt} sq ft)</span>
                     <span aria-hidden="true">·</span>
-                    <span>{room.bedConfiguration.split(' ')[1]} Bed</span>
+                    <span>{room.bedConfiguration}</span>
                     <span aria-hidden="true">·</span>
                     <span>Up to {room.maxAdults} Guests</span>
                   </div>

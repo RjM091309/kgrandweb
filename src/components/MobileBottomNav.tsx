@@ -11,10 +11,6 @@ import {
   Phone,
   Info,
   HelpCircle,
-  User,
-  ChevronRight,
-  ClipboardList,
-  LogOut,
 } from 'lucide-react';
 import { useHotel, Page } from '../context/HotelContext';
 
@@ -35,7 +31,6 @@ const SHEET_TILES: NavItem[] = [
   { page: 'booking', label: 'Book a Stay', icon: CalendarCheck },
   { page: 'about', label: 'About', icon: Info },
   { page: 'faqs', label: 'FAQs', icon: HelpCircle },
-  { page: 'my-bookings', label: 'My Stays', icon: ClipboardList },
 ];
 
 const BAR_HEIGHT = 64; // px, excludes safe-area inset
@@ -156,7 +151,7 @@ const MoreSheet: React.FC<{ open: boolean; onClose: () => void; onNavigate: (pag
   onClose,
   onNavigate,
 }) => {
-  const { currentPage, user, logoutUser } = useHotel();
+  const { currentPage } = useHotel();
   const dragControls = useDragControls();
 
   useEffect(() => {
@@ -214,27 +209,7 @@ const MoreSheet: React.FC<{ open: boolean; onClose: () => void; onNavigate: (pag
               className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4"
               style={{ paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom, 0px))' }}
             >
-              {/* Guest account card */}
-              <button
-                type="button"
-                onClick={() => onNavigate(user.isLoggedIn ? 'profile' : 'signin')}
-                className="w-full flex items-center gap-3 rounded-2xl bg-stone-900 border border-stone-800 px-3 py-3 text-left active:opacity-80"
-              >
-                <span className="h-10 w-10 shrink-0 inline-flex items-center justify-center rounded-full bg-stone-800 text-amber-300">
-                  <User className="w-5 h-5" />
-                </span>
-                <span className="flex-1 min-w-0">
-                  <span className="block text-sm font-semibold truncate">
-                    {user.isLoggedIn ? `${user.firstName} ${user.lastName}` : 'Sign In / Guest Account'}
-                  </span>
-                  <span className="block text-[11px] text-amber-300/90 truncate">
-                    {user.isLoggedIn ? user.membershipTier : 'Manage stays and member benefits'}
-                  </span>
-                </span>
-                <ChevronRight className="w-4 h-4 text-stone-500 shrink-0" />
-              </button>
-
-              <p className="mt-5 mb-2 px-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-300">Explore</p>
+              <p className="mt-1 mb-2 px-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-300">Explore</p>
               <div className="grid grid-cols-3 gap-2.5">
                 {SHEET_TILES.map(({ page, label, icon: Icon }) => {
                   const active = currentPage === page;
@@ -262,20 +237,6 @@ const MoreSheet: React.FC<{ open: boolean; onClose: () => void; onNavigate: (pag
                   );
                 })}
               </div>
-
-              {user.isLoggedIn && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    logoutUser();
-                    onClose();
-                  }}
-                  className="mt-4 w-full flex items-center gap-3 rounded-2xl bg-stone-900 border border-stone-800 px-4 py-3 text-sm font-medium text-red-300 active:opacity-80"
-                >
-                  <LogOut className="w-4 h-4" />
-                  Sign Out
-                </button>
-              )}
 
               <div className="mt-5 flex items-center justify-center gap-4 text-[11px] text-stone-500">
                 <button type="button" onClick={() => onNavigate('privacy')} className="hover:text-stone-300">

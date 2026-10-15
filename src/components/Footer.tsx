@@ -14,8 +14,7 @@ const EXPLORE_LINKS: { label: string; page: Page }[] = [
 const SERVICE_LINKS: { label: string; page: Page }[] = [
   { label: 'Contact Us', page: 'contact' },
   { label: 'FAQs', page: 'faqs' },
-  { label: 'Manage Reservations', page: 'my-bookings' },
-  { label: 'Guest Sign In', page: 'signin' },
+  { label: 'Book a Stay', page: 'booking' },
 ];
 
 const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(HOTEL_INFO.mapsQuery)}`;

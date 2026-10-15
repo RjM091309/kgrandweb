@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Room, ROOMS, SpecialOffer, BookingAddOn } from '../data/hotelData';
+import { Room, ROOMS, SpecialOffer, BookingAddOn, applyHotelInfo } from '../data/hotelData';
+import { fetchAvailability, fetchHotelInfo } from '../lib/bookingApi';
 
 export type Page =
   | 'home'
@@ -90,6 +91,8 @@ interface HotelContextType {
   activeBooking: BookingRecord | null;
   lightboxImage: { url: string; title: string; caption?: string } | null;
   notification: string | null;
+  /** Free rooms per admin room type id for the searched dates, or null while loading / when the booking system can't be reached. */
+  availability: Record<string, number> | null;
   navigateTo: (page: Page, params?: { roomId?: string; offerId?: string; bookingRef?: string }) => void;
   updateSearch: (updates: Partial<SearchState>) => void;
   selectRoom: (room: Room | null) => void;
@@ -103,9 +106,16 @@ interface HotelContextType {
   showNotification: (msg: string) => void;
 }
 
+/** yyyy-MM-dd of today + `days`, in the visitor's local time. */
+const dayFromToday = (days: number) => {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
+
 const defaultSearch: SearchState = {
-  checkIn: '2026-10-18',
-  checkOut: '2026-10-22',
+  checkIn: dayFromToday(1),
+  checkOut: dayFromToday(2),
   adults: 2,
   children: 0,
   roomsCount: 1,
@@ -146,6 +156,31 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [activeBooking, setActiveBooking] = useState<BookingRecord | null>(null);
   const [lightboxImage, setLightboxImage] = useState<{ url: string; title: string; caption?: string } | null>(null);
   const [notification, setNotification] = useState<string | null>(null);
+  const [availability, setAvailability] = useState<Record<string, number> | null>(null);
+  // Bumped once the admin system's rates and times are copied into ROOMS / HOTEL_INFO, so the pages re-render with them.
+  const [, setInfoVersion] = useState(0);
+
+  useEffect(() => {
+    fetchHotelInfo()
+      .then((info) => {
+        applyHotelInfo(info);
+        setInfoVersion((v) => v + 1);
+      })
+      .catch(() => {
+        // The built-in rates stay on screen; booking itself reports the problem if the system is still unreachable.
+      });
+  }, []);
+
+  useEffect(() => {
+    let current = true;
+    setAvailability(null);
+    fetchAvailability(searchState.checkIn, searchState.checkOut)
+      .then((res) => current && setAvailability(res.available))
+      .catch(() => current && setAvailability(null));
+    return () => {
+      current = false;
+    };
+  }, [searchState.checkIn, searchState.checkOut]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -234,6 +269,7 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         activeBooking,
         lightboxImage,
         notification,
+        availability,
         navigateTo,
         updateSearch,
         selectRoom,
