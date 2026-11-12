@@ -8,6 +8,8 @@ export interface Room {
   /** The room type's id in the K Grand admin system (its rate and availability come from there). */
   apiTypeId: string;
   pricePerNight: number;
+  /** Number of guests whose breakfast is included in the nightly rate. */
+  breakfastIncluded: number;
   originalPrice?: number;
   sizeSqM: number;
   sizeSqFt: number;
@@ -125,7 +127,8 @@ export const ROOMS: Room[] = [
     name: "Standard Room",
     tagline: "Comfortable, well-appointed room for solo travelers and couples",
     category: "Standard",
-    pricePerNight: 4000,
+    pricePerNight: 3600,
+    breakfastIncluded: 1,
     sizeSqM: 24, // TODO: confirm actual size
     sizeSqFt: 258,
     maxAdults: 2,
@@ -139,6 +142,7 @@ export const ROOMS: Room[] = [
       "Step out onto your own terrace or balcony, then unwind at the sauna or pool. Free on-site parking and EV charging make arriving by car easy."
     ],
     features: [
+      "Breakfast for 1 included",
       "Private terrace or balcony",
       "Air-conditioning",
       "Private bathroom",
@@ -162,7 +166,8 @@ export const ROOMS: Room[] = [
     name: "Deluxe King Room",
     tagline: "Extra space and a king-size bed for a more relaxed stay",
     category: "Deluxe King",
-    pricePerNight: 4600,
+    pricePerNight: 3800,
+    breakfastIncluded: 1,
     sizeSqM: 30, // TODO: confirm actual size
     sizeSqFt: 323,
     maxAdults: 2,
@@ -176,6 +181,7 @@ export const ROOMS: Room[] = [
       "Every Deluxe room includes air-conditioning, a private bathroom, and its own terrace or balcony, plus access to the sauna and pool."
     ],
     features: [
+      "Breakfast for 1 included",
       "King-size bed",
       "Private terrace or balcony",
       "Air-conditioning",
@@ -201,7 +207,8 @@ export const ROOMS: Room[] = [
     name: "Deluxe Twin Room",
     tagline: "Two beds and extra space, ideal for friends, colleagues, and families",
     category: "Deluxe Twin",
-    pricePerNight: 5500,
+    pricePerNight: 4400,
+    breakfastIncluded: 2,
     sizeSqM: 32, // TODO: confirm actual size
     sizeSqFt: 344,
     maxAdults: 2,
@@ -215,6 +222,7 @@ export const ROOMS: Room[] = [
       "Enjoy air-conditioning, a private bathroom, and your own terrace or balcony, plus access to the sauna, pool, free parking, and EV charging."
     ],
     features: [
+      "Breakfast for 2 included",
       "Two separate beds",
       "Private terrace or balcony",
       "Sitting area",
