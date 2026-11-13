@@ -7,8 +7,7 @@ export default defineConfig(({mode}) => {
   const env = loadEnv(mode, process.cwd(), '');
   // Set PMS_API_TARGET in .env to point at a different PMS (e.g. http://localhost:5050 on a dev PC).
   // Without it, the proxy goes to the admin server on the same machine (port 5051), as on the live server.
-  const localPms = env.PMS_API_TARGET;
-  const pmsTarget = localPms || 'http://127.0.0.1:5051';
+  const pmsTarget = env.PMS_API_TARGET || 'http://127.0.0.1:5051';
   return {
     plugins: [react(), tailwindcss()],
     resolve: {
@@ -30,12 +29,10 @@ export default defineConfig(({mode}) => {
           configure: (proxy) => {
             proxy.on('proxyReq', (proxyReq, req) => {
               if (req.socket.remoteAddress) proxyReq.setHeader('X-Real-IP', req.socket.remoteAddress.replace(/^::ffff:/, ''));
-              // A local PMS rejects POSTs whose Origin differs from its own ("Cross-site request blocked"), so present the
-              // request as same-origin. Only when PMS_API_TARGET is set, so the live server behaves exactly as before.
-              if (localPms) {
-                proxyReq.setHeader('Origin', localPms);
-                proxyReq.setHeader('Referer', `${localPms}/`);
-              }
+              // The PMS rejects POSTs whose Origin differs from its own ("Cross-site request blocked"), and the browser's
+              // Origin here is this dev server (e.g. http://<server-ip>:5070). Present the request as same-origin.
+              proxyReq.setHeader('Origin', pmsTarget);
+              proxyReq.setHeader('Referer', `${pmsTarget}/`);
             });
           },
         },
