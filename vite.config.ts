@@ -1,9 +1,14 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import {defineConfig} from 'vite';
+import {defineConfig, loadEnv} from 'vite';
 
-export default defineConfig(() => {
+export default defineConfig(({mode}) => {
+  const env = loadEnv(mode, process.cwd(), '');
+  // Set PMS_API_TARGET in .env to point at a different PMS (e.g. http://localhost:5050 on a dev PC).
+  // Without it, the proxy goes to the admin server on the same machine (port 5051), as on the live server.
+  const localPms = env.PMS_API_TARGET;
+  const pmsTarget = localPms || 'http://127.0.0.1:5051';
   return {
     plugins: [react(), tailwindcss()],
     resolve: {
@@ -20,10 +25,17 @@ export default defineConfig(() => {
       // API is forwarded to the admin server as nginx does for the domain. X-Real-IP lets the admin rate-limit each visitor.
       proxy: {
         '/api/public': {
-          target: 'http://127.0.0.1:5051',
+          target: pmsTarget,
+          changeOrigin: true,
           configure: (proxy) => {
             proxy.on('proxyReq', (proxyReq, req) => {
               if (req.socket.remoteAddress) proxyReq.setHeader('X-Real-IP', req.socket.remoteAddress.replace(/^::ffff:/, ''));
+              // A local PMS rejects POSTs whose Origin differs from its own ("Cross-site request blocked"), so present the
+              // request as same-origin. Only when PMS_API_TARGET is set, so the live server behaves exactly as before.
+              if (localPms) {
+                proxyReq.setHeader('Origin', localPms);
+                proxyReq.setHeader('Referer', `${localPms}/`);
+              }
             });
           },
         },

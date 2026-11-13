@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useHotel } from '../context/HotelContext';
 import { Users, Search, ChevronDown, Plus, Minus, ShieldCheck } from 'lucide-react';
 import { DateRangePicker } from './DateRangePicker';
-import { ROOM_CATEGORIES } from '../data/hotelData';
+import { ROOM_CATEGORIES, GUESTS_PER_ROOM, MAX_ROOMS_PER_BOOKING } from '../data/hotelData';
 
 interface HeroSearchPanelProps {
   compact?: boolean;
@@ -16,13 +16,11 @@ export const HeroSearchPanel: React.FC<HeroSearchPanelProps> = ({ compact = fals
   const { searchState, updateSearch, navigateTo } = useHotel();
   const [showGuestDropdown, setShowGuestDropdown] = useState(false);
   const guestRef = useRef<HTMLDivElement>(null);
-  const guestTotal = searchState.adults + searchState.children;
+  const guestTotal = GUESTS_PER_ROOM * searchState.roomsCount; // fixed for now: 2 guests per room
   const isCard = layout === 'card';
 
   const guestRows = [
-    { key: 'adults', label: 'Adults', hint: 'Ages 13 and above', min: 1, max: 8 },
-    { key: 'children', label: 'Children', hint: 'Ages 0 to 12', min: 0, max: 6 },
-    { key: 'roomsCount', label: 'Rooms', hint: 'Number of rooms', min: 1, max: 4 },
+    { key: 'roomsCount', label: 'Rooms', hint: 'Number of rooms', min: 1, max: MAX_ROOMS_PER_BOOKING },
   ] as const;
 
   useEffect(() => {
@@ -119,8 +117,7 @@ export const HeroSearchPanel: React.FC<HeroSearchPanelProps> = ({ compact = fals
 
           <div className="flex items-center justify-between gap-3 mt-2 pt-4 border-t border-stone-100">
             <p className="text-xs text-stone-500">
-              {searchState.adults} {searchState.adults === 1 ? 'adult' : 'adults'}
-              {searchState.children > 0 && `, ${searchState.children} ${searchState.children === 1 ? 'child' : 'children'}`}
+              {GUESTS_PER_ROOM} guests per room
             </p>
             <button
               type="button"

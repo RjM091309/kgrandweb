@@ -10,6 +10,10 @@ export interface ApiRoomType {
   rate: number;
   rooms: number;
   maxGuests: number;
+  /** Breakfasts included per room per night; set in the PMS. */
+  breakfast?: number;
+  /** Price of each extra breakfast (PHP); set in the PMS. */
+  extraBreakfastPrice?: number;
 }
 
 export interface HotelInfoResponse {
@@ -38,6 +42,8 @@ export interface BookingRequest {
   guest: { name: string; email: string; phone: string; country?: string };
   specialRequests?: string;
   estimatedArrival?: string;
+  /** Extra breakfasts added on top of the room's included ones, each charged at the PMS's extra breakfast price. */
+  extraBreakfast?: number;
   /** Honeypot: hidden from people, so only bots fill it in. */
   website?: string;
 }
@@ -53,6 +59,8 @@ export interface BookingResponse {
   children: number;
   rate: number;
   total: number;
+  /** Total breakfasts on the booking (set by the PMS from the room type). */
+  breakfast?: number;
   currency: string;
   status: 'pending';
 }

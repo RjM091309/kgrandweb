@@ -432,9 +432,10 @@ export const RoomsPage: React.FC = () => {
                           </button>
                           <button
                             onClick={() => handleBookNow(room)}
-                            className="px-4 py-2 text-xs font-semibold text-stone-950 bg-amber-300 hover:bg-amber-200 rounded transition-colors shadow-sm"
+                            disabled={availability?.[room.apiTypeId] === 0}
+                            className="px-4 py-2 text-xs font-semibold text-stone-950 bg-amber-300 hover:bg-amber-200 rounded transition-colors shadow-sm disabled:bg-stone-200 disabled:text-stone-500 disabled:cursor-not-allowed disabled:shadow-none"
                           >
-                            Reserve
+                            {availability?.[room.apiTypeId] === 0 ? 'Sold out' : 'Reserve'}
                           </button>
                         </div>
                       </div>
@@ -526,9 +527,10 @@ export const RoomsPage: React.FC = () => {
                           </button>
                           <button
                             onClick={() => handleBookNow(room)}
-                            className="px-5 py-2 text-xs font-semibold text-stone-950 bg-amber-300 hover:bg-amber-200 rounded transition-colors shadow-sm"
+                            disabled={availability?.[room.apiTypeId] === 0}
+                            className="px-5 py-2 text-xs font-semibold text-stone-950 bg-amber-300 hover:bg-amber-200 rounded transition-colors shadow-sm disabled:bg-stone-200 disabled:text-stone-500 disabled:cursor-not-allowed disabled:shadow-none"
                           >
-                            Reserve Room
+                            {availability?.[room.apiTypeId] === 0 ? 'Sold out' : 'Reserve Room'}
                           </button>
                         </div>
                       </div>

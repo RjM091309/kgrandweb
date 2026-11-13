@@ -614,7 +614,7 @@ export const MyBookingsPage: React.FC = () => {
                     </h3>
 
                     <p className="text-xs text-stone-500">
-                      {booking.checkIn} → {booking.checkOut} ({booking.nights} nights) · {booking.adults} Adults
+                      {booking.checkIn} → {booking.checkOut} ({booking.nights} nights) · {booking.adults + booking.children} {booking.adults + booking.children === 1 ? 'Guest' : 'Guests'}
                     </p>
                   </div>
                 </div>
@@ -711,7 +711,7 @@ export const MyBookingsPage: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-stone-500">Guests</p>
-                  <p className="font-semibold text-stone-900">{selectedBookingForDetails.adults} Adults, {selectedBookingForDetails.children} Children</p>
+                  <p className="font-semibold text-stone-900">{selectedBookingForDetails.adults + selectedBookingForDetails.children} {selectedBookingForDetails.adults + selectedBookingForDetails.children === 1 ? 'Guest' : 'Guests'}</p>
                 </div>
                 <div>
                   <p className="text-stone-500">Status</p>

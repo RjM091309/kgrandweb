@@ -8,8 +8,10 @@ export interface Room {
   /** The room type's id in the K Grand admin system (its rate and availability come from there). */
   apiTypeId: string;
   pricePerNight: number;
-  /** Number of guests whose breakfast is included in the nightly rate. */
-  breakfastIncluded: number;
+  /** Breakfasts included per room per night. Set by the PMS (applyHotelInfo); the value here is only a fallback. */
+  breakfast: number;
+  /** Price of each extra breakfast a guest adds (PHP). Set by the PMS; the value here is only a fallback. */
+  extraBreakfastPrice: number;
   originalPrice?: number;
   sizeSqM: number;
   sizeSqFt: number;
@@ -116,6 +118,17 @@ export const IMAGES = {
   galleryRoom2: "/images/3.jpg",
 };
 
+/** Guests are fixed for now: every booked room is for this many guests (no guest picker). */
+export const GUESTS_PER_ROOM = 2;
+
+/** The most rooms a guest can pick in one reservation. The PMS rejects more than this (group bookings go through the hotel), and the free rooms left for the dates limit it further. */
+export const MAX_ROOMS_PER_BOOKING = 4;
+
+/** Fallback price of an extra breakfast (PHP); the PMS value wins. Charged once per breakfast, not per night or per room. */
+export const EXTRA_BREAKFAST_PRICE = 400;
+/** The most extra breakfasts that can be added to one booking. */
+export const MAX_EXTRA_BREAKFAST = 10;
+
 export const ROOM_CATEGORIES = ['All', 'Standard', 'Deluxe King', 'Deluxe Twin'];
 
 // The three room types of the K Grand admin system. Name, nightly rate (its walk-in rate) and guest limit are replaced at load
@@ -128,7 +141,8 @@ export const ROOMS: Room[] = [
     tagline: "Comfortable, well-appointed room for solo travelers and couples",
     category: "Standard",
     pricePerNight: 3600,
-    breakfastIncluded: 1,
+    breakfast: 1,
+    extraBreakfastPrice: EXTRA_BREAKFAST_PRICE,
     sizeSqM: 24, // TODO: confirm actual size
     sizeSqFt: 258,
     maxAdults: 2,
@@ -142,7 +156,6 @@ export const ROOMS: Room[] = [
       "Step out onto your own terrace or balcony, then unwind at the sauna or pool. Free on-site parking and EV charging make arriving by car easy."
     ],
     features: [
-      "Breakfast for 1 included",
       "Private terrace or balcony",
       "Air-conditioning",
       "Private bathroom",
@@ -167,7 +180,8 @@ export const ROOMS: Room[] = [
     tagline: "Extra space and a king-size bed for a more relaxed stay",
     category: "Deluxe King",
     pricePerNight: 3800,
-    breakfastIncluded: 1,
+    breakfast: 1,
+    extraBreakfastPrice: EXTRA_BREAKFAST_PRICE,
     sizeSqM: 30, // TODO: confirm actual size
     sizeSqFt: 323,
     maxAdults: 2,
@@ -181,7 +195,6 @@ export const ROOMS: Room[] = [
       "Every Deluxe room includes air-conditioning, a private bathroom, and its own terrace or balcony, plus access to the sauna and pool."
     ],
     features: [
-      "Breakfast for 1 included",
       "King-size bed",
       "Private terrace or balcony",
       "Air-conditioning",
@@ -208,7 +221,8 @@ export const ROOMS: Room[] = [
     tagline: "Two beds and extra space, ideal for friends, colleagues, and families",
     category: "Deluxe Twin",
     pricePerNight: 4400,
-    breakfastIncluded: 2,
+    breakfast: 2,
+    extraBreakfastPrice: EXTRA_BREAKFAST_PRICE,
     sizeSqM: 32, // TODO: confirm actual size
     sizeSqFt: 344,
     maxAdults: 2,
@@ -222,7 +236,6 @@ export const ROOMS: Room[] = [
       "Enjoy air-conditioning, a private bathroom, and your own terrace or balcony, plus access to the sauna, pool, free parking, and EV charging."
     ],
     features: [
-      "Breakfast for 2 included",
       "Two separate beds",
       "Private terrace or balcony",
       "Sitting area",
@@ -244,6 +257,20 @@ export const ROOMS: Room[] = [
   }
 ];
 
+/** The feature line shown for a room's included breakfast. */
+export function breakfastLabel(count: number): string {
+  if (!count || count < 1) return "No breakfast";
+  return `Breakfast for ${count} included`;
+}
+
+/** Sets a room's breakfast count and keeps its first feature line in sync with it. */
+function setBreakfast(room: Room, count: number) {
+  room.breakfast = count;
+  room.features = [breakfastLabel(count), ...room.features.filter((f) => !/breakfast/i.test(f))];
+}
+
+for (const room of ROOMS) setBreakfast(room, room.breakfast);
+
 /**
  * Copies the admin system's live values into the room list and hotel info: each room type's name, walk-in rate and guest limit,
  * and the check-in / check-out times. The pages read ROOMS and HOTEL_INFO directly, so the context re-renders after calling this.
@@ -257,6 +284,8 @@ export function applyHotelInfo(info: HotelInfoResponse) {
     room.name = type.name;
     if (type.rate > 0) room.pricePerNight = type.rate;
     room.maxAdults = type.maxGuests;
+    if (typeof type.breakfast === 'number') setBreakfast(room, type.breakfast);
+    if (typeof type.extraBreakfastPrice === 'number') room.extraBreakfastPrice = type.extraBreakfastPrice;
   }
 }
 

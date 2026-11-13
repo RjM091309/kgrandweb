@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DateRangePicker } from '../components/DateRangePicker';
 import { useHotel } from '../context/HotelContext';
-import { ROOMS, HOTEL_INFO } from '../data/hotelData';
+import { ROOMS, HOTEL_INFO, GUESTS_PER_ROOM, MAX_ROOMS_PER_BOOKING, MAX_EXTRA_BREAKFAST } from '../data/hotelData';
 import { createBooking, BookingResponse } from '../lib/bookingApi';
 import {
   Check,
@@ -40,7 +40,7 @@ const inputClass =
  * guest pays at the hotel, and the front desk confirms it with the guest.
  */
 export const BookingFlowPage: React.FC = () => {
-  const { selectedRoom, selectRoom, searchState, updateSearch, navigateTo, showNotification, availability } = useHotel();
+  const { selectedRoom, selectRoom, searchState, updateSearch, navigateTo, showNotification, availability, refreshAvailability } = useHotel();
 
   const currentRoom = selectedRoom || ROOMS[0];
 
@@ -60,21 +60,29 @@ export const BookingFlowPage: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [confirmed, setConfirmed] = useState<BookingResponse | null>(null);
+  const [extraBreakfast, setExtraBreakfast] = useState(0);
 
   // Nights, guests and price (the admin system bills nights × nightly rate per room, with no added taxes or fees)
   const checkInDate = new Date(searchState.checkIn);
   const checkOutDate = new Date(searchState.checkOut);
   const nightsCount = Math.max(1, Math.round((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24)));
-  const guestCount = searchState.adults + searchState.children;
+  const guestCount = GUESTS_PER_ROOM * searchState.roomsCount; // fixed for now; sent to the PMS as adults
   const capacity = currentRoom.maxAdults * searchState.roomsCount;
-  const totalDue = currentRoom.pricePerNight * nightsCount * searchState.roomsCount;
+  const roomTotal = currentRoom.pricePerNight * nightsCount * searchState.roomsCount;
+  const extraBreakfastTotal = extraBreakfast * currentRoom.extraBreakfastPrice;
+  const totalDue = roomTotal + extraBreakfastTotal;
+  // Breakfasts included: the room type's count (set in the PMS) per room per night.
+  const breakfastPerNight = currentRoom.breakfast * searchState.roomsCount;
+  const breakfastTotal = breakfastPerNight * nightsCount + extraBreakfast; // included + extra
+  const breakfastText =
+    breakfastTotal === 0
+      ? 'No breakfast'
+      : `${breakfastTotal} ${breakfastTotal === 1 ? 'breakfast' : 'breakfasts'}${extraBreakfast > 0 ? ` (incl. ${extraBreakfast} extra)` : ' included'}${nightsCount > 1 && extraBreakfast === 0 ? ` (${breakfastPerNight} per night)` : ''}`;
   const roomsLeft = availability?.[currentRoom.apiTypeId];
 
   const stayProblem =
     guestCount > capacity
       ? `A ${currentRoom.name} takes up to ${currentRoom.maxAdults} guests per room. Add a room or choose fewer guests.`
-      : searchState.adults < searchState.roomsCount
-      ? 'Each room needs at least one adult.'
       : roomsLeft !== undefined && roomsLeft < searchState.roomsCount
       ? roomsLeft === 0
         ? `The ${currentRoom.name} is sold out for these dates. Please choose other dates or another room.`
@@ -104,8 +112,8 @@ export const BookingFlowPage: React.FC = () => {
         checkIn: searchState.checkIn,
         checkOut: searchState.checkOut,
         rooms: searchState.roomsCount,
-        adults: searchState.adults,
-        children: searchState.children,
+        adults: guestCount,
+        children: 0,
         guest: {
           name: `${guestForm.firstName.trim()} ${guestForm.lastName.trim()}`,
           email: guestForm.email.trim(),
@@ -114,6 +122,7 @@ export const BookingFlowPage: React.FC = () => {
         },
         specialRequests: guestForm.specialRequests.trim(),
         estimatedArrival: guestForm.estimatedArrival,
+        extraBreakfast,
         website: guestForm.website,
       });
       setConfirmed(result);
@@ -121,6 +130,8 @@ export const BookingFlowPage: React.FC = () => {
       goTo(4);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong. Please try again.');
+      // Someone may have just taken the last room: refresh so sold-out rooms show as such right away.
+      refreshAvailability();
     } finally {
       setSubmitting(false);
     }
@@ -208,20 +219,20 @@ export const BookingFlowPage: React.FC = () => {
                   className="sm:col-span-2"
                 />
                 <div>
-                  <label className="block text-[10px] uppercase tracking-wider text-stone-500 mb-1">Adults</label>
-                  <Select
-                    value={String(searchState.adults)}
-                    onChange={(v) => updateSearch({ adults: Number(v) })}
-                    options={[1, 2, 3, 4, 5, 6, 7, 8].map((n) => ({ value: String(n), label: String(n) }))}
-                    className="text-xs"
-                  />
+                  <label className="block text-[10px] uppercase tracking-wider text-stone-500 mb-1">Guests</label>
+                  <div className="h-10 flex items-center px-3 rounded-lg border border-stone-200 bg-white text-stone-800 select-none">
+                    {guestCount}
+                  </div>
                 </div>
                 <div>
-                  <label className="block text-[10px] uppercase tracking-wider text-stone-500 mb-1">Children</label>
+                  <label className="block text-[10px] uppercase tracking-wider text-stone-500 mb-1">Add Breakfast</label>
                   <Select
-                    value={String(searchState.children)}
-                    onChange={(v) => updateSearch({ children: Number(v) })}
-                    options={[0, 1, 2, 3, 4, 5, 6].map((n) => ({ value: String(n), label: String(n) }))}
+                    value={String(extraBreakfast)}
+                    onChange={(v) => setExtraBreakfast(Number(v))}
+                    options={Array.from({ length: MAX_EXTRA_BREAKFAST + 1 }, (_, i) => ({
+                      value: String(i),
+                      label: i === 0 ? 'None' : `+${i} (${peso(i * currentRoom.extraBreakfastPrice)})`,
+                    }))}
                     className="text-xs"
                   />
                 </div>
@@ -230,7 +241,7 @@ export const BookingFlowPage: React.FC = () => {
                   <Select
                     value={String(searchState.roomsCount)}
                     onChange={(v) => updateSearch({ roomsCount: Number(v) })}
-                    options={[1, 2, 3, 4].map((n) => ({ value: String(n), label: String(n) }))}
+                    options={Array.from({ length: Math.max(1, searchState.roomsCount, Math.min(MAX_ROOMS_PER_BOOKING, roomsLeft ?? MAX_ROOMS_PER_BOOKING)) }, (_, i) => i + 1).map((n) => ({ value: String(n), label: String(n) }))}
                     className="text-xs"
                   />
                 </div>
@@ -408,11 +419,8 @@ export const BookingFlowPage: React.FC = () => {
                       value={guestForm.estimatedArrival}
                       onChange={(v) => setGuestForm({ ...guestForm, estimatedArrival: v })}
                       options={[
-                        { value: HOTEL_INFO.checkInTime, label: `${HOTEL_INFO.checkInTime} (Standard Check-in)` },
-                        { value: '16:00 – 18:00', label: '16:00 – 18:00' },
-                        { value: '19:00 – 21:00', label: '19:00 – 21:00' },
-                        { value: 'After 21:00', label: 'Late Evening (After 21:00)' },
-                        { value: `Early arrival (before ${HOTEL_INFO.checkInTime})`, label: `Early Arrival Request (Before ${HOTEL_INFO.checkInTime})` },
+                        { value: HOTEL_INFO.checkInTime, label: `Regular Check-in (${HOTEL_INFO.checkInTime})` },
+                        { value: 'Evening check-in', label: 'Evening Check-in' },
                       ]}
                       className="text-xs"
                     />
@@ -498,7 +506,8 @@ export const BookingFlowPage: React.FC = () => {
                   <p className="font-semibold text-stone-900 font-serif text-sm">Your Stay</p>
                   <p>{currentRoom.name} × {searchState.roomsCount}</p>
                   <p>{searchState.checkIn} → {searchState.checkOut} ({nightsCount} {nightsCount === 1 ? 'night' : 'nights'})</p>
-                  <p>{searchState.adults} {searchState.adults === 1 ? 'adult' : 'adults'}{searchState.children > 0 ? `, ${searchState.children} ${searchState.children === 1 ? 'child' : 'children'}` : ''}</p>
+                  <p>{guestCount} {guestCount === 1 ? 'guest' : 'guests'}</p>
+                  <p>Breakfast: {breakfastText}</p>
                   <p>Check-in from {HOTEL_INFO.checkInTime} · Check-out until {HOTEL_INFO.checkOutTime}</p>
                 </div>
                 <div className="p-4 bg-stone-50 rounded-xl border border-stone-200/80 space-y-1.5">
@@ -588,7 +597,8 @@ export const BookingFlowPage: React.FC = () => {
                   <h3 className="font-serif text-base font-semibold text-stone-900 mb-2">Stay Details</h3>
                   <div className="flex justify-between gap-4"><span className="text-stone-500">Room:</span><span className="font-semibold text-stone-900 text-right">{confirmed.roomType} × {confirmed.rooms}</span></div>
                   <div className="flex justify-between gap-4"><span className="text-stone-500">Dates:</span><span className="font-semibold text-stone-900 text-right">{confirmed.checkIn} to {confirmed.checkOut} ({confirmed.nights} {confirmed.nights === 1 ? 'night' : 'nights'})</span></div>
-                  <div className="flex justify-between gap-4"><span className="text-stone-500">Guests:</span><span className="font-semibold text-stone-900 text-right">{confirmed.adults} Adults{confirmed.children > 0 ? `, ${confirmed.children} Children` : ''}</span></div>
+                  <div className="flex justify-between gap-4"><span className="text-stone-500">Breakfast:</span><span className="font-semibold text-stone-900 text-right">{(() => { const b = confirmed.breakfast ?? currentRoom.breakfast * confirmed.rooms * confirmed.nights; return b === 0 ? 'No breakfast' : `${b} ${b === 1 ? 'breakfast' : 'breakfasts'} included`; })()}</span></div>
+                  <div className="flex justify-between gap-4"><span className="text-stone-500">Guests:</span><span className="font-semibold text-stone-900 text-right">{confirmed.adults + confirmed.children} {confirmed.adults + confirmed.children === 1 ? 'Guest' : 'Guests'}</span></div>
                   <div className="flex justify-between gap-4"><span className="text-stone-500">Check-in:</span><span className="font-semibold text-stone-900 text-right">From {HOTEL_INFO.checkInTime}</span></div>
                   <div className="flex justify-between gap-4"><span className="text-stone-500">Status:</span><span className="font-semibold text-amber-800 text-right">Awaiting front desk confirmation</span></div>
                 </div>
@@ -596,6 +606,19 @@ export const BookingFlowPage: React.FC = () => {
                 <div className="space-y-2 p-5 bg-stone-50 rounded-xl border border-stone-200/80">
                   <h3 className="font-serif text-base font-semibold text-stone-900 mb-2">Payment</h3>
                   <div className="flex justify-between gap-4"><span className="text-stone-500">Rate:</span><span className="tabular-nums font-semibold text-stone-900">{peso(confirmed.rate)} / night / room</span></div>
+                  {(() => {
+                    // Anything the PMS billed beyond the room itself (the extra breakfasts), so the total adds up for the guest.
+                    const extraCharge = confirmed.total - confirmed.rate * confirmed.nights * confirmed.rooms;
+                    if (extraCharge <= 0) return null;
+                    return (
+                      <div className="flex justify-between gap-4">
+                        <span className="text-stone-500">
+                          Extra charge: extra breakfast{extraBreakfast > 0 ? ` (${extraBreakfast} × ${peso(currentRoom.extraBreakfastPrice)})` : ''}
+                        </span>
+                        <span className="tabular-nums font-semibold text-stone-900">{peso(extraCharge)}</span>
+                      </div>
+                    );
+                  })()}
                   <div className="pt-2 border-t border-stone-200 flex justify-between text-sm">
                     <span className="font-semibold text-stone-900">Total to Pay at Hotel:</span>
                     <span className="font-bold font-serif text-stone-950 text-base tabular-nums">{peso(confirmed.total)}</span>
@@ -675,7 +698,11 @@ export const BookingFlowPage: React.FC = () => {
                 </div>
                 <div className="flex justify-between">
                   <span>Guests:</span>
-                  <span className="font-semibold text-stone-900">{searchState.adults} Adults{searchState.children > 0 ? `, ${searchState.children} Children` : ''}</span>
+                  <span className="font-semibold text-stone-900">{guestCount} {guestCount === 1 ? 'Guest' : 'Guests'}</span>
+                </div>
+                <div className="flex justify-between gap-3">
+                  <span>Breakfast:</span>
+                  <span className="font-semibold text-stone-900 text-right">{breakfastText}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Rooms:</span>
@@ -687,8 +714,14 @@ export const BookingFlowPage: React.FC = () => {
               <div className="space-y-2 text-xs text-stone-600">
                 <div className="flex justify-between gap-3">
                   <span>{peso(currentRoom.pricePerNight)} × {nightsCount} {nightsCount === 1 ? 'night' : 'nights'}{searchState.roomsCount > 1 ? ` × ${searchState.roomsCount} rooms` : ''}</span>
-                  <span className="font-semibold text-stone-900 tabular-nums">{peso(totalDue)}</span>
+                  <span className="font-semibold text-stone-900 tabular-nums">{peso(roomTotal)}</span>
                 </div>
+                {extraBreakfast > 0 && (
+                  <div className="flex justify-between gap-3">
+                    <span>Extra breakfast: {extraBreakfast} × {peso(currentRoom.extraBreakfastPrice)}</span>
+                    <span className="font-semibold text-stone-900 tabular-nums">{peso(extraBreakfastTotal)}</span>
+                  </div>
+                )}
                 <div className="pt-2 border-t border-stone-200 flex justify-between text-sm">
                   <span className="font-semibold text-stone-900">Total:</span>
                   <span className="font-serif font-bold text-stone-950 text-base tabular-nums">{peso(totalDue)}</span>

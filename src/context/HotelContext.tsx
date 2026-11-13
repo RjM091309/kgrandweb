@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { Room, ROOMS, SpecialOffer, BookingAddOn, applyHotelInfo } from '../data/hotelData';
 import { fetchAvailability, fetchHotelInfo } from '../lib/bookingApi';
 
@@ -93,6 +93,8 @@ interface HotelContextType {
   notification: string | null;
   /** Free rooms per admin room type id for the searched dates, or null while loading / when the booking system can't be reached. */
   availability: Record<string, number> | null;
+  /** Re-fetches availability for the searched dates (e.g. after a booking is refused for lack of rooms). */
+  refreshAvailability: () => Promise<void>;
   navigateTo: (page: Page, params?: { roomId?: string; offerId?: string; bookingRef?: string }) => void;
   updateSearch: (updates: Partial<SearchState>) => void;
   selectRoom: (room: Room | null) => void;
@@ -171,16 +173,37 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       });
   }, []);
 
+  // New dates: clear the old numbers so nothing stale is shown while the new ones load.
   useEffect(() => {
-    let current = true;
     setAvailability(null);
-    fetchAvailability(searchState.checkIn, searchState.checkOut)
-      .then((res) => current && setAvailability(res.available))
-      .catch(() => current && setAvailability(null));
-    return () => {
-      current = false;
-    };
   }, [searchState.checkIn, searchState.checkOut]);
+
+  // Fetch for the chosen dates, then keep it fresh: rooms can sell out while the page sits open, so refetch
+  // on every page change, when the tab regains focus, and every 30 seconds. Refreshes keep the last numbers
+  // on screen (no flicker) and keep them if a refresh fails.
+  const datesKey = useRef('');
+  datesKey.current = `${searchState.checkIn}|${searchState.checkOut}`;
+  const refreshAvailability = useCallback(() => {
+    const { checkIn, checkOut } = searchState;
+    const key = `${checkIn}|${checkOut}`;
+    return fetchAvailability(checkIn, checkOut)
+      // Ignore an answer for dates the guest has since changed.
+      .then((res) => { if (datesKey.current === key) setAvailability(res.available); })
+      .catch(() => {});
+  }, [searchState.checkIn, searchState.checkOut]);
+
+  useEffect(() => {
+    refreshAvailability();
+    const onVisible = () => document.visibilityState === 'visible' && refreshAvailability();
+    const timer = window.setInterval(onVisible, 30000);
+    document.addEventListener('visibilitychange', onVisible);
+    window.addEventListener('focus', onVisible);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('focus', onVisible);
+    };
+  }, [refreshAvailability, currentPage]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -270,6 +293,7 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         lightboxImage,
         notification,
         availability,
+        refreshAvailability,
         navigateTo,
         updateSearch,
         selectRoom,

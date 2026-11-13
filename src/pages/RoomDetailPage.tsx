@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { DateRangePicker } from '../components/DateRangePicker';
 import { useHotel } from '../context/HotelContext';
-import { ROOMS, Room, HOTEL_INFO, IMAGES } from '../data/hotelData';
+import { ROOMS, Room, HOTEL_INFO, IMAGES, GUESTS_PER_ROOM, MAX_ROOMS_PER_BOOKING } from '../data/hotelData';
 import {
   Star,
   Users,
@@ -299,29 +299,17 @@ export const RoomDetailPage: React.FC = () => {
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div className="border border-stone-200 rounded-lg p-2.5">
                     <label className="block text-[10px] uppercase tracking-wider text-stone-500">Guests</label>
-                    <Select
-                      value={String(searchState.adults)}
-                      onChange={(v) => updateSearch({ adults: Number(v) })}
-                      options={[
-                        { value: "1", label: "1 Adult" },
-                        { value: "2", label: "2 Adults" },
-                        { value: "3", label: "3 Adults" },
-                        { value: "4", label: "4 Adults" },
-                      ]}
-                      variant="bare"
-                      className="font-semibold mt-0.5"
-                    />
+                    <p className="font-semibold mt-0.5 py-1.5 text-stone-900 select-none">{GUESTS_PER_ROOM} Guests / room</p>
                   </div>
                   <div className="border border-stone-200 rounded-lg p-2.5">
                     <label className="block text-[10px] uppercase tracking-wider text-stone-500">Rooms</label>
                     <Select
                       value={String(searchState.roomsCount)}
                       onChange={(v) => updateSearch({ roomsCount: Number(v) })}
-                      options={[
-                        { value: "1", label: "1 Room" },
-                        { value: "2", label: "2 Rooms" },
-                        { value: "3", label: "3 Rooms" },
-                      ]}
+                      options={Array.from({ length: MAX_ROOMS_PER_BOOKING }, (_, i) => i + 1).map((n) => ({
+                        value: String(n),
+                        label: `${n} ${n === 1 ? 'Room' : 'Rooms'}`,
+                      }))}
                       variant="bare"
                       className="font-semibold mt-0.5"
                     />
