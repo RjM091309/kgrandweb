@@ -93,8 +93,8 @@ export const HOTEL_INFO = {
   tagline: "Discover Your Perfect Escape",
   welcomeText: "Apartment-style rooms in the heart of Clark Freeport Zone, minutes from Clark International Airport, with a sauna, pool, free parking, and EV charging on site.",
   address: "Lot 1 E. Aguinaldo St., Clark Freeport Zone, Mabalacat City, 2010 Pampanga, Philippines",
-  phone: "+63 945 789 1069",
-  phoneHref: "tel:+639457891069",
+  phone: "+63 956 968 5229",
+  phoneHref: "tel:+639569685229",
   reservationsEmail: "reservations@thekgrandhotel.com", // TODO: confirm this mailbox exists
   inquiriesEmail: "info@thekgrandhotel.com", // TODO: confirm this mailbox exists
   checkInTime: "14:00", // replaced at load by the admin system's setting
