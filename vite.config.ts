@@ -16,8 +16,6 @@ export default defineConfig(({mode}) => {
       },
     },
     server: {
-      // Kept until nginx serves dist/ for the domain; safe to remove after that move.
-      allowedHosts: ['thekgrandhotel.com', 'www.thekgrandhotel.com'],
       // Set DISABLE_HMR=true to turn off hot reload and file watching.
       hmr: process.env.DISABLE_HMR !== 'true',
       watch: process.env.DISABLE_HMR === 'true' ? null : {},
