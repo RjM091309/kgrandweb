@@ -10,6 +10,19 @@ export default defineConfig(({mode}) => {
   const pmsTarget = env.PMS_API_TARGET || 'http://127.0.0.1:5051';
   return {
     plugins: [react(), tailwindcss()],
+    build: {
+      rolldownOptions: {
+        output: {
+          // Libraries in their own files: they rarely change, so browsers keep them cached across deploys of the site's code.
+          codeSplitting: {
+            groups: [
+              {name: 'react', test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/},
+              {name: 'motion', test: /node_modules[\\/](motion|motion-dom|motion-utils|framer-motion)[\\/]/},
+            ],
+          },
+        },
+      },
+    },
     resolve: {
       alias: {
         '@': path.resolve(import.meta.dirname, '.'),
