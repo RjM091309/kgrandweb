@@ -18,13 +18,6 @@ import { RoomsPage } from './pages/RoomsPage';
 import { RoomDetailPage } from './pages/RoomDetailPage';
 import { BookingFlowPage } from './pages/BookingFlowPage';
 import {
-  SignInPage,
-  RegisterPage,
-  ForgotPasswordPage,
-  ProfilePage,
-  MyBookingsPage
-} from './pages/AccountPages';
-import {
   AboutPage,
   AmenitiesPage,
   OffersPage,
@@ -58,11 +51,6 @@ const MainContent: React.FC = () => {
         {currentPage === 'gallery' && <GalleryPage />}
         {currentPage === 'contact' && <ContactPage />}
         {currentPage === 'faqs' && <FaqsPage />}
-        {currentPage === 'signin' && <SignInPage />}
-        {currentPage === 'register' && <RegisterPage />}
-        {currentPage === 'forgot-password' && <ForgotPasswordPage />}
-        {currentPage === 'profile' && <ProfilePage />}
-        {currentPage === 'my-bookings' && <MyBookingsPage />}
         {currentPage === 'privacy' && <LegalPage type="privacy" />}
         {currentPage === 'terms' && <LegalPage type="terms" />}
         </motion.div>

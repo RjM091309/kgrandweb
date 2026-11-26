@@ -3,10 +3,10 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig, loadEnv} from 'vite';
 
+// Development only. In production nginx serves the built dist/ folder and forwards /api/public/ to the admin server itself.
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, process.cwd(), '');
   // Set PMS_API_TARGET in .env to point at a different PMS (e.g. http://localhost:5050 on a dev PC).
-  // Without it, the proxy goes to the admin server on the same machine (port 5051), as on the live server.
   const pmsTarget = env.PMS_API_TARGET || 'http://127.0.0.1:5051';
   return {
     plugins: [react(), tailwindcss()],
@@ -16,23 +16,20 @@ export default defineConfig(({mode}) => {
       },
     },
     server: {
+      // Kept until nginx serves dist/ for the domain; safe to remove after that move.
       allowedHosts: ['thekgrandhotel.com', 'www.thekgrandhotel.com'],
       // Set DISABLE_HMR=true to turn off hot reload and file watching.
       hmr: process.env.DISABLE_HMR !== 'true',
       watch: process.env.DISABLE_HMR === 'true' ? null : {},
-      // When the site is opened on its port directly (http://<server-ip>:5070, while the domain is in maintenance), the booking
-      // API is forwarded to the admin server as nginx does for the domain. X-Real-IP lets the admin rate-limit each visitor.
       proxy: {
+        // The browser's Host header is kept (no changeOrigin), so it matches the Origin of the page and the PMS's
+        // same-origin check passes on its own, while it still blocks requests sent from other sites.
         '/api/public': {
           target: pmsTarget,
-          changeOrigin: true,
           configure: (proxy) => {
             proxy.on('proxyReq', (proxyReq, req) => {
+              // Lets the PMS rate-limit each visitor (it trusts X-Real-IP only from a local proxy).
               if (req.socket.remoteAddress) proxyReq.setHeader('X-Real-IP', req.socket.remoteAddress.replace(/^::ffff:/, ''));
-              // The PMS rejects POSTs whose Origin differs from its own ("Cross-site request blocked"), and the browser's
-              // Origin here is this dev server (e.g. http://<server-ip>:5070). Present the request as same-origin.
-              proxyReq.setHeader('Origin', pmsTarget);
-              proxyReq.setHeader('Referer', `${pmsTarget}/`);
             });
           },
         },
