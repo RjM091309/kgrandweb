@@ -151,6 +151,9 @@ export const Footer: React.FC = () => {
               <form onSubmit={handleSubscribe}>
                 <div className="flex">
                   <input
+                    id="newsletter-email"
+                    name="email"
+                    aria-label="Email address for the newsletter"
                     type="email"
                     required
                     placeholder="Your email address"

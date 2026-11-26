@@ -364,8 +364,10 @@ export const BookingFlowPage: React.FC = () => {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] font-medium text-stone-700 mb-1">First Name</label>
+                    <label htmlFor="guest-first-name" className="block text-[11px] font-medium text-stone-700 mb-1">First Name</label>
                     <input
+                      id="guest-first-name"
+                      name="firstName"
                       type="text"
                       required
                       autoComplete="given-name"
@@ -376,8 +378,10 @@ export const BookingFlowPage: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-medium text-stone-700 mb-1">Last Name</label>
+                    <label htmlFor="guest-last-name" className="block text-[11px] font-medium text-stone-700 mb-1">Last Name</label>
                     <input
+                      id="guest-last-name"
+                      name="lastName"
                       type="text"
                       required
                       autoComplete="family-name"
@@ -391,8 +395,10 @@ export const BookingFlowPage: React.FC = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] font-medium text-stone-700 mb-1">Email Address</label>
+                    <label htmlFor="guest-email" className="block text-[11px] font-medium text-stone-700 mb-1">Email Address</label>
                     <input
+                      id="guest-email"
+                      name="email"
                       type="email"
                       required
                       autoComplete="email"
@@ -403,8 +409,10 @@ export const BookingFlowPage: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-medium text-stone-700 mb-1">Mobile Number</label>
+                    <label htmlFor="guest-phone" className="block text-[11px] font-medium text-stone-700 mb-1">Mobile Number</label>
                     <input
+                      id="guest-phone"
+                      name="phone"
                       type="tel"
                       required
                       autoComplete="tel"
@@ -418,8 +426,10 @@ export const BookingFlowPage: React.FC = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] font-medium text-stone-700 mb-1">Country / Region of Residence</label>
+                    <label htmlFor="guest-country" className="block text-[11px] font-medium text-stone-700 mb-1">Country / Region of Residence</label>
                     <input
+                      id="guest-country"
+                      name="country"
                       type="text"
                       autoComplete="country-name"
                       value={guestForm.country}
@@ -442,10 +452,12 @@ export const BookingFlowPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-medium text-stone-700 mb-1">
+                  <label htmlFor="guest-special-requests" className="block text-[11px] font-medium text-stone-700 mb-1">
                     Special Requests (optional)
                   </label>
                   <textarea
+                    id="guest-special-requests"
+                    name="specialRequests"
                     rows={3}
                     value={guestForm.specialRequests}
                     onChange={(e) => setGuestForm({ ...guestForm, specialRequests: e.target.value })}
@@ -459,6 +471,8 @@ export const BookingFlowPage: React.FC = () => {
                   <label>
                     Website
                     <input
+                      id="guest-website"
+                      name="website"
                       type="text"
                       tabIndex={-1}
                       autoComplete="off"
@@ -537,6 +551,8 @@ export const BookingFlowPage: React.FC = () => {
               <div className="p-4 bg-stone-50 rounded-xl border border-stone-200/60 text-xs text-stone-600">
                 <label className="flex items-start gap-2 cursor-pointer">
                   <input
+                    id="accept-terms"
+                    name="acceptTerms"
                     type="checkbox"
                     checked={acceptedTerms}
                     onChange={(e) => setAcceptedTerms(e.target.checked)}

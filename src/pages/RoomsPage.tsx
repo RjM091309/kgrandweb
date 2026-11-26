@@ -235,6 +235,9 @@ export const RoomsPage: React.FC = () => {
                   <span className="font-bold text-stone-900 tabular-nums">₱{maxPrice.toLocaleString()}</span>
                 </div>
                 <input
+                  id="max-price"
+                  name="maxPrice"
+                  aria-label="Maximum nightly rate"
                   type="range"
                   min={MIN_RATE}
                   max={MAX_RATE}
