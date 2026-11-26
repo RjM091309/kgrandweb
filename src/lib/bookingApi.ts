@@ -22,6 +22,8 @@ export interface HotelInfoResponse {
   checkInTime: string;
   checkOutTime: string;
   roomTypes: ApiRoomType[];
+  /** Cloudflare Turnstile site key; sent only while the admin system requires the bot check on bookings. */
+  captchaSiteKey?: string;
 }
 
 export interface AvailabilityResponse {
@@ -46,6 +48,8 @@ export interface BookingRequest {
   extraBreakfast?: number;
   /** Honeypot: hidden from people, so only bots fill it in. */
   website?: string;
+  /** Token from the Turnstile widget, when the bot check is on. */
+  captchaToken?: string;
 }
 
 export interface BookingResponse {

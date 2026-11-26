@@ -17,6 +17,7 @@ import {
   Mail
 } from 'lucide-react';
 import { Select } from '../components/Select';
+import { Turnstile } from '../components/Turnstile';
 
 interface GuestForm {
   firstName: string;
@@ -61,6 +62,13 @@ export const BookingFlowPage: React.FC = () => {
   const [error, setError] = useState('');
   const [confirmed, setConfirmed] = useState<BookingResponse | null>(null);
   const [extraBreakfast, setExtraBreakfast] = useState(0);
+  // Bot check (Cloudflare Turnstile), only while the admin system asks for it. A token works once, so the widget is
+  // remounted (captchaRound) for a new one after each failed attempt.
+  const captchaSiteKey = HOTEL_INFO.captchaSiteKey;
+  const [captchaToken, setCaptchaToken] = useState('');
+  const [captchaRound, setCaptchaRound] = useState(0);
+  const [captchaLoadError, setCaptchaLoadError] = useState(false);
+  const captchaMissing = Boolean(captchaSiteKey) && !captchaToken;
 
   // Nights, guests and price (the admin system bills nights × nightly rate per room, with no added taxes or fees)
   const checkInDate = new Date(searchState.checkIn);
@@ -124,12 +132,18 @@ export const BookingFlowPage: React.FC = () => {
         estimatedArrival: guestForm.estimatedArrival,
         extraBreakfast,
         website: guestForm.website,
+        ...(captchaSiteKey ? { captchaToken } : {}),
       });
       setConfirmed(result);
       showNotification(`Booking ${result.codes.join(', ')} received!`);
       goTo(4);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong. Please try again.');
+      // The token was used up by this attempt: get a new one.
+      if (captchaSiteKey) {
+        setCaptchaToken('');
+        setCaptchaRound((n) => n + 1);
+      }
       // Someone may have just taken the last room: refresh so sold-out rooms show as such right away.
       refreshAvailability();
     } finally {
@@ -542,6 +556,22 @@ export const BookingFlowPage: React.FC = () => {
                 </label>
               </div>
 
+              {captchaSiteKey && (
+                <div className="space-y-1.5">
+                  <Turnstile
+                    key={captchaRound}
+                    siteKey={captchaSiteKey}
+                    onToken={setCaptchaToken}
+                    onLoadError={() => setCaptchaLoadError(true)}
+                  />
+                  {captchaLoadError && (
+                    <p className="text-[11px] text-rose-700">
+                      The security check could not load. Please check your connection and reload the page, or call us at {HOTEL_INFO.phone} to book.
+                    </p>
+                  )}
+                </div>
+              )}
+
               {errorBox}
 
               {/* Complete Booking CTA Button */}
@@ -558,7 +588,7 @@ export const BookingFlowPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleConfirmReservation}
-                  disabled={!acceptedTerms || submitting}
+                  disabled={!acceptedTerms || submitting || captchaMissing}
                   className="px-5 sm:px-8 py-3.5 text-xs uppercase tracking-widest font-semibold bg-amber-300 hover:bg-amber-200 text-stone-950 rounded-lg transition-all shadow-md flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShieldCheck className="w-4 h-4" />}

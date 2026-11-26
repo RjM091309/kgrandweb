@@ -99,6 +99,7 @@ export const HOTEL_INFO = {
   inquiriesEmail: "info@thekgrandhotel.com", // TODO: confirm this mailbox exists
   checkInTime: "14:00", // replaced at load by the admin system's setting
   checkOutTime: "12:00", // replaced at load by the admin system's setting
+  captchaSiteKey: "", // set at load when the admin system requires the Turnstile bot check on bookings
   mapsQuery: "The K Grand Hotel, Lot 1 E. Aguinaldo St., Clark Freeport Zone, Mabalacat City, Pampanga",
   cancellationPolicyDefault: "Complimentary cancellation up to 48 hours prior to arrival. Deposit is fully refundable within this window.",
   rating: 4.96,
@@ -278,6 +279,7 @@ for (const room of ROOMS) setBreakfast(room, room.breakfast);
 export function applyHotelInfo(info: HotelInfoResponse) {
   HOTEL_INFO.checkInTime = info.checkInTime || HOTEL_INFO.checkInTime;
   HOTEL_INFO.checkOutTime = info.checkOutTime || HOTEL_INFO.checkOutTime;
+  HOTEL_INFO.captchaSiteKey = info.captchaSiteKey || '';
   for (const room of ROOMS) {
     const type = info.roomTypes.find((t) => t.id === room.apiTypeId);
     if (!type) continue;
