@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { DateRangePicker } from '../components/DateRangePicker';
 import { useHotel } from '../context/HotelContext';
 import { ROOMS, HOTEL_INFO, GUESTS_PER_ROOM, MAX_ROOMS_PER_BOOKING, MAX_EXTRA_BREAKFAST } from '../data/hotelData';
@@ -111,7 +111,12 @@ export const BookingFlowPage: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Set synchronously, so a fast double click can't send the booking twice before the button re-renders as disabled.
+  const sending = useRef(false);
+
   const handleConfirmReservation = async () => {
+    if (sending.current) return;
+    sending.current = true;
     setError('');
     setSubmitting(true);
     try {
@@ -147,6 +152,7 @@ export const BookingFlowPage: React.FC = () => {
       // Someone may have just taken the last room: refresh so sold-out rooms show as such right away.
       refreshAvailability();
     } finally {
+      sending.current = false;
       setSubmitting(false);
     }
   };
@@ -466,13 +472,15 @@ export const BookingFlowPage: React.FC = () => {
                   />
                 </div>
 
-                {/* Honeypot: off-screen and skipped by keyboard and screen readers, so only bots fill it in. */}
+                {/* Honeypot: off-screen and skipped by keyboard and screen readers, so only bots fill it in. Its name and label
+                    match nothing browsers or password managers autofill (not "website"/"url"), so a real guest's booking is
+                    never refused because autofill filled it. It is still sent to the PMS as `website`. */}
                 <div aria-hidden="true" className="absolute -left-[9999px] w-px h-px overflow-hidden">
                   <label>
-                    Website
+                    Leave this field empty
                     <input
-                      id="guest-website"
-                      name="website"
+                      id="kg-hp-note"
+                      name="kg_hp_note"
                       type="text"
                       tabIndex={-1}
                       autoComplete="off"
