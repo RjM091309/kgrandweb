@@ -86,5 +86,38 @@ export const fetchHotelInfo = () => request<HotelInfoResponse>('/info');
 export const fetchAvailability = (checkIn: string, checkOut: string) =>
   request<AvailabilityResponse>(`/availability?checkIn=${encodeURIComponent(checkIn)}&checkOut=${encodeURIComponent(checkOut)}`);
 
-export const createBooking = (booking: BookingRequest) =>
-  request<BookingResponse>('/bookings', { method: 'POST', body: JSON.stringify(booking) });
+/**
+ * The booking just made in this tab, so "Check my booking" can fill in its reference and email. Kept in memory only (gone on reload),
+ * never in browser storage.
+ */
+export const lastBooking = { code: '', email: '' };
+
+export const createBooking = async (booking: BookingRequest) => {
+  const result = await request<BookingResponse>('/bookings', { method: 'POST', body: JSON.stringify(booking) });
+  lastBooking.code = result.codes[0] ?? '';
+  lastBooking.email = booking.guest.email;
+  return result;
+};
+
+export type LookupStatus = 'pending' | 'confirmed' | 'checked_in' | 'completed' | 'cancelled';
+
+export interface LookupResponse {
+  code: string;
+  status: LookupStatus;
+  roomType: string;
+  checkIn: string;
+  checkOut: string;
+  nights: number;
+  adults: number;
+  children: number;
+  rate: number;
+  currency: string;
+  checkInTime: string;
+  checkOutTime: string;
+  /** The guest's initials only (J••• D•••). */
+  guest: string;
+}
+
+/** "Check my booking": the PMS answers only when the reference and the email it was booked with both match. */
+export const lookupBooking = (query: { code: string; email: string; captchaToken?: string }) =>
+  request<LookupResponse>('/bookings/lookup', { method: 'POST', body: JSON.stringify(query) });

@@ -21,6 +21,7 @@ const loaders = {
   roomDetail: () => import('./pages/RoomDetailPage'),
   booking: () => import('./pages/BookingFlowPage'),
   info: () => import('./pages/InformationPages'),
+  checkBooking: () => import('./pages/CheckBookingPage'),
 };
 
 const RELOAD_FLAG = 'kgrand-chunk-reload';
@@ -58,6 +59,7 @@ const GalleryPage = page(loaders.info, 'GalleryPage');
 const ContactPage = page(loaders.info, 'ContactPage');
 const FaqsPage = page(loaders.info, 'FaqsPage');
 const LegalPage = page(loaders.info, 'LegalPage');
+const CheckBookingPage = page(loaders.checkBooking, 'CheckBookingPage');
 
 /** Shown in the rare case a page is still downloading. */
 const PageLoading = () => <div className="min-h-[60vh]" aria-busy="true" />;
@@ -92,6 +94,7 @@ const MainContent: React.FC = () => {
         {currentPage === 'rooms' && <RoomsPage />}
         {currentPage === 'room-detail' && <RoomDetailPage />}
         {currentPage === 'booking' && <BookingFlowPage />}
+        {currentPage === 'check-booking' && <CheckBookingPage />}
         {currentPage === 'about' && <AboutPage />}
         {currentPage === 'amenities' && <AmenitiesPage />}
         {currentPage === 'offers' && <OffersPage />}

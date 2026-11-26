@@ -13,6 +13,7 @@ export type Page =
   | 'about'
   | 'contact'
   | 'faqs'
+  | 'check-booking'
   | 'privacy'
   | 'terms';
 

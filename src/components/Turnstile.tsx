@@ -35,7 +35,13 @@ function loadTurnstile(): Promise<TurnstileApi> {
  * The widget. Calls onToken with a fresh token, or with '' when it expires or fails. Remount it (change its key) for a new token
  * after a booking attempt, since each token works once.
  */
-export const Turnstile: React.FC<{ siteKey: string; onToken: (token: string) => void; onLoadError: () => void }> = ({ siteKey, onToken, onLoadError }) => {
+export const Turnstile: React.FC<{
+  siteKey: string;
+  /** Checked by the PMS, so a token made for one form doesn't work on another ('booking' or 'lookup'). */
+  action?: 'booking' | 'lookup';
+  onToken: (token: string) => void;
+  onLoadError: () => void;
+}> = ({ siteKey, action = 'booking', onToken, onLoadError }) => {
   const box = useRef<HTMLDivElement>(null);
   // Latest callbacks, without re-rendering the widget when the parent re-renders.
   const handlers = useRef({ onToken, onLoadError });
@@ -49,7 +55,7 @@ export const Turnstile: React.FC<{ siteKey: string; onToken: (token: string) => 
         if (gone || !box.current) return;
         widgetId = api.render(box.current, {
           sitekey: siteKey,
-          action: 'booking',
+          action,
           theme: 'light',
           callback: (token: string) => handlers.current.onToken(token),
           'expired-callback': () => handlers.current.onToken(''),
@@ -61,7 +67,7 @@ export const Turnstile: React.FC<{ siteKey: string; onToken: (token: string) => 
       gone = true;
       if (widgetId && window.turnstile) window.turnstile.remove(widgetId);
     };
-  }, [siteKey]);
+  }, [siteKey, action]);
 
   return <div ref={box} className="min-h-[65px]" />;
 };

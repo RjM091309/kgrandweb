@@ -694,6 +694,14 @@ export const BookingFlowPage: React.FC = () => {
                       <span className="font-semibold text-stone-900 break-all">{HOTEL_INFO.reservationsEmail}</span>
                     </a>
                     <p className="text-[11px] text-stone-500">Please mention your booking reference when you contact us.</p>
+                    <button
+                      type="button"
+                      onClick={() => navigateTo('check-booking')}
+                      className="w-full text-left p-2.5 rounded-lg bg-amber-50 border border-amber-200 hover:border-amber-400 transition-colors"
+                    >
+                      <span className="block font-semibold text-stone-900">Check your booking status anytime</span>
+                      <span className="block text-[11px] text-stone-600">Save your reference. Use it with your email on "Check My Booking".</span>
+                    </button>
                   </div>
                 </div>
               </div>

@@ -11,6 +11,7 @@ import {
   Phone,
   Info,
   HelpCircle,
+  Search,
 } from 'lucide-react';
 import { useHotel, Page } from '../context/HotelContext';
 
@@ -29,6 +30,7 @@ const SHEET_TILES: NavItem[] = [
   { page: 'amenities', label: 'Amenities', icon: Sparkles },
   { page: 'gallery', label: 'Gallery', icon: Images },
   { page: 'booking', label: 'Book a Stay', icon: CalendarCheck },
+  { page: 'check-booking', label: 'My Booking', icon: Search },
   { page: 'about', label: 'About', icon: Info },
   { page: 'faqs', label: 'FAQs', icon: HelpCircle },
 ];
