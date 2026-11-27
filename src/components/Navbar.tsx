@@ -19,6 +19,7 @@ export const Navbar: React.FC = () => {
     { label: 'Special Offers', page: 'offers' },
     { label: 'Gallery', page: 'gallery' },
     { label: 'Contact', page: 'contact' },
+    { label: 'My Booking', page: 'check-booking' },
   ];
 
   return (
